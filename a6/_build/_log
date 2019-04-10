@@ -1,0 +1,8 @@
+### Starting build.
+# Target: terminalPrint.ml.depends, tags: { package(ANSITerminal), package(oUnit), package(yojson), extension:ml, file:terminalPrint.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package yojson -package ANSITerminal -modules terminalPrint.ml > terminalPrint.ml.depends # cached
+# Target: terminalPrint.cmo, tags: { package(ANSITerminal), package(oUnit), package(yojson), byte, compile, extension:cmo, extension:ml, file:terminalPrint.cmo, file:terminalPrint.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package yojson -package ANSITerminal -o terminalPrint.cmo terminalPrint.ml # cached
+# Target: terminalPrint.byte, tags: { package(ANSITerminal), package(oUnit), package(yojson), byte, dont_link_with, extension:byte, file:terminalPrint.byte, link, ocaml, program, quiet, traverse }
+ocamlfind ocamlc -linkpkg -package oUnit -package yojson -package ANSITerminal terminalPrint.cmo -o terminalPrint.byte # cached
+# Compilation successful.

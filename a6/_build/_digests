@@ -1,0 +1,4 @@
+"Rule: ocaml dependencies ml (%=terminalPrint )": "\190u\1760\181\001C\016\235\194U2\206\137h-"
+"Resource: /home/vagrant/cs3110-a6/a6/terminalPrint.ml": "\184\225\241\020\149\202\127\027%\182\r\229\244\141r\216"
+"Rule: ocaml: cmo* -> byte (%=terminalPrint )": "\172\246\143L\234\195?\240\183XZ\\\164l\1974"
+"Rule: ocaml: ml -> cmo & cmi (%=terminalPrint )": "A\251\225\rj\170M\006\019\188o&x\160\212\131"
