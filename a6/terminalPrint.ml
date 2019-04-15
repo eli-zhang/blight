@@ -1,4 +1,6 @@
-type tile = | Land | Water | Air
+(* open ANSITerminal *)
+
+type tile = | Land | Water | Air | Bridge | Civ
 let world = [(0, 0, Land); (0, 1, Land); (0, 2, Water); (0, 3, Land); 
              (0, 4, Land); (0, 5, Water); (0, 6, Land); (0, 7, Land); 
              (0, 8, Land); (0, 9, Water); (0, 10, Land); (0, 11, Water); 
@@ -313,7 +315,7 @@ let world = [(0, 0, Land); (0, 1, Land); (0, 2, Water); (0, 3, Land);
              (15, 44, Water); (15, 45, Water); (15, 46, Land); (15, 47, Water); 
              (15, 48, Land); (15, 49, Water); (15, 50, Land); (15, 51, Land); 
              (15, 52, Land); (15, 53, Water); (15, 54, Water); (15, 55, Land); 
-             (15, 56, Land); (15, 57, Land); (15, 58, Land); (15, 59, Land); 
+             (15, 56, Air); (15, 57, Air); (15, 58, Land); (15, 59, Land); 
              (15, 60, Water); (15, 61, Water); (15, 62, Land); (15, 63, Land); 
              (15, 64, Land); (15, 65, Water); (15, 66, Land); (15, 67, Water); 
              (15, 68, Land); (15, 69, Land); (15, 70, Water); (15, 71, Land); 
@@ -425,8 +427,8 @@ let world = [(0, 0, Land); (0, 1, Land); (0, 2, Water); (0, 3, Land);
              (21, 12, Water); (21, 13, Land); (21, 14, Land); (21, 15, Land); 
              (21, 16, Land); (21, 17, Land); (21, 18, Land); (21, 19, Land); 
              (21, 20, Land); (21, 21, Land); (21, 22, Land); (21, 23, Water); 
-             (21, 24, Land); (21, 25, Land); (21, 26, Water); (21, 27, Water); 
-             (21, 28, Land); (21, 29, Water); (21, 30, Land); (21, 31, Land); 
+             (21, 24, Civ); (21, 25, Civ); (21, 26, Civ); (21, 27, Civ); 
+             (21, 28, Civ); (21, 29, Civ); (21, 30, Land); (21, 31, Land); 
              (21, 32, Land); (21, 33, Water); (21, 34, Water); (21, 35, Water); 
              (21, 36, Water); (21, 37, Land); (21, 38, Land); (21, 39, Land); 
              (21, 40, Water); (21, 41, Land); (21, 42, Land); (21, 43, Land); 
@@ -604,29 +606,41 @@ let world = [(0, 0, Land); (0, 1, Land); (0, 2, Water); (0, 3, Land);
 let print_world world =
   let rec print_world_helper row world = 
     match world with
-    | [] -> ANSITerminal.(print_string [red] "\nDone.");
+    | [] -> print_string "\027[0m\n \027[31mDone.";
     | (a, b, tile)::t ->
       if a = row then 
         begin
           match tile with
-          | Land -> ANSITerminal.(print_string [black] "▉"); 
+          | Land -> print_string "\027[40m "; 
             print_world_helper a t 
-          | Water -> ANSITerminal.(print_string [blue] "▉"); 
+          | Water -> print_string "\027[46m "; 
             print_world_helper a t 
-          | Air -> ANSITerminal.(print_string [white] "▉"); 
+          | Bridge -> print_string "\027[40m";
+            print_world_helper a t
+          | Civ -> print_string "\027[0m ";
+            print_world_helper a t
+          | Air -> print_string "\027[47m "; 
             print_world_helper a t 
         end
       else
         begin
           match tile with
-          | Land -> ANSITerminal.(print_string [black] "\n▉"); 
+          | Land -> print_string "\027[0m\n";
+            print_string "\027[40m "; 
             print_world_helper a t
-          | Water -> ANSITerminal.(print_string [blue] "\n▉"); 
+          | Water -> print_string "\027[0m\n";
+            print_string "\027[46m "; 
             print_world_helper a t 
-          | Air -> ANSITerminal.(print_string [white] "\n▉"); 
+          | Bridge -> print_string "\027[0m\n";
+            print_string "\027 [40m";
+            print_world_helper a t
+          | Civ -> print_string "\027[0m\n";
+            print_string "\027[0m ";
+            print_world_helper a t
+          | Air -> print_string "\027[0m\n";
+            print_string "\027[47m "; 
             print_world_helper a t 
-        end
-    | _ -> failwith "Incorrect world format" in
+        end in
   print_world_helper 1 world
 
 

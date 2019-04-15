@@ -1,4 +1,4 @@
-"Rule: ocaml dependencies ml (%=terminalPrint )": "\248\001\005{\165\022\0000\161\249\249\239M\209\193\031"
-"Resource: /home/vagrant/cs3110-a6/a6/terminalPrint.ml": "(y\219\173`\187\212\180^\014G\252\144\241\014\211"
-"Rule: ocaml: cmo* -> byte (%=terminalPrint )": "\146@\b\151%\168[\232\243\160\131\152\234\1528\141"
-"Rule: ocaml: ml -> cmo & cmi (%=terminalPrint )": "}4\152\198\r\217\011\252\132\233\n\1978\228\167\242"
+"Rule: ocaml dependencies ml (%=terminalPrint )": "V\028\155M\193$\200\234rtul\031\235\213\137"
+"Resource: /home/vagrant/cs3110-a6/a6/terminalPrint.ml": "\241x.\020\017\001a_\150\029\144\0258\031G\r"
+"Rule: ocaml: cmo* -> byte (%=terminalPrint )": "\023\245E\227\229)d\204\233\164\025^\000\201\161\143"
+"Rule: ocaml: ml -> cmo & cmi (%=terminalPrint )": "\231\237\132\007#\128R\150\150W\231\236\\c\174\161"
