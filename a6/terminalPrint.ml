@@ -1,6 +1,6 @@
 (* open ANSITerminal *)
 
-type tile = | Land | Water | Air | Bridge | Civ
+type tile = | Land | Water | Bridge | Civ
 let world = [(0, 0, Land); (0, 1, Land); (0, 2, Water); (0, 3, Land); 
              (0, 4, Land); (0, 5, Water); (0, 6, Land); (0, 7, Land); 
              (0, 8, Land); (0, 9, Water); (0, 10, Land); (0, 11, Water); 
@@ -315,7 +315,7 @@ let world = [(0, 0, Land); (0, 1, Land); (0, 2, Water); (0, 3, Land);
              (15, 44, Water); (15, 45, Water); (15, 46, Land); (15, 47, Water); 
              (15, 48, Land); (15, 49, Water); (15, 50, Land); (15, 51, Land); 
              (15, 52, Land); (15, 53, Water); (15, 54, Water); (15, 55, Land); 
-             (15, 56, Air); (15, 57, Air); (15, 58, Land); (15, 59, Land); 
+             (15, 56, Bridge); (15, 57, Bridge); (15, 58, Land); (15, 59, Land); 
              (15, 60, Water); (15, 61, Water); (15, 62, Land); (15, 63, Land); 
              (15, 64, Land); (15, 65, Water); (15, 66, Land); (15, 67, Water); 
              (15, 68, Land); (15, 69, Land); (15, 70, Water); (15, 71, Land); 
@@ -615,12 +615,10 @@ let print_world world =
             print_world_helper a t 
           | Water -> print_string "\027[46m "; 
             print_world_helper a t 
-          | Bridge -> print_string "\027[40m";
+          | Bridge -> print_string "\027[0m";
             print_world_helper a t
-          | Civ -> print_string "\027[0m ";
+          | Civ -> print_string "\027[47m ";
             print_world_helper a t
-          | Air -> print_string "\027[47m "; 
-            print_world_helper a t 
         end
       else
         begin
@@ -632,14 +630,11 @@ let print_world world =
             print_string "\027[46m "; 
             print_world_helper a t 
           | Bridge -> print_string "\027[0m\n";
-            print_string "\027 [40m";
+            print_string "\027[0m";
             print_world_helper a t
           | Civ -> print_string "\027[0m\n";
-            print_string "\027[0m ";
+            print_string "\027[47m ";
             print_world_helper a t
-          | Air -> print_string "\027[0m\n";
-            print_string "\027[47m "; 
-            print_world_helper a t 
         end in
   print_world_helper 1 world
 
