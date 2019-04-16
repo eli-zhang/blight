@@ -1,10 +1,7 @@
-type place = int*int
+open Pervasives
 
 type command = 
-  | Start of place
-  (* | Upgrade of disease *)
-  (* | Spread of disease *)
-  (* | Pause*)
+  | Start of int list
   | Help
   | Quit
 
@@ -17,10 +14,8 @@ let parse str =
   match filtered_list with
   | [] -> raise Empty
   | h::t ->
-    if h = "start" then if t = [] then raise Malformed else Start t
-    (*else if h = "upgrade" then if t = [] then raise Malformed else Upgrade t
-      else if h = "spread" then if t = [] then raise Malformed else Spread t*)
-    (*else if h = "pause" then if t = [] then Pause else raise Malformed *)
+    if h = "start" then if List.length(t) <> 2 then raise Malformed 
+      else Start (List.map int_of_string t)
     else if h = "help" then if t = [] then Help else raise Malformed             
     else if h = "quit" then if t = [] then Quit else raise Malformed
     else raise Malformed

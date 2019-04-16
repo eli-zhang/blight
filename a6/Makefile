@@ -1,5 +1,5 @@
-MODULES=terminalPrint objects infection
-OBJECTS=$(MODULES:=.cmo)
+MODULES=terminalPrint objects infection controller app randomMap
+OBJECTS=$(MODULES:=.cmo) 
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
 TEST=test.byte
@@ -26,7 +26,7 @@ finalcheck: check
 	bash finalcheck.sh
 
 zip:
-	
+
 
 docs: docs-public docs-private
 

@@ -13,3 +13,4 @@ let infectTile (tile : Tile.t) (disease : Disease.t) : Tile.t =
       else Civ {civ with infected = new_infected}
   | _ -> tile
 
+
