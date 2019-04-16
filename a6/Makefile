@@ -1,4 +1,4 @@
-MODULES=terminalPrint
+MODULES=terminalPrint disease civilization
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
