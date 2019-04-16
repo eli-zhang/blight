@@ -1,19 +1,15 @@
-open Tile
-open Civilization
-open Disease
+open Objects
 
-module StartInfection (T:Tile) (D:Disease) : Tile = struct
-  type tile_type = T.tile_type
-  let population = T.population
-  let infected = match T.tile_type with
-    | Civ -> if T.infected = 0 then 1 else 0
-    | _ -> 0
-end
+let startInfection (tile : Tile.t) : Tile.t =
+  match tile with 
+  | Civ civ -> if civ.infected = 0 then Civ {civ with infected = 1} else Civ civ
+  | _ -> tile
 
-module InfectTile (T:Tile) (D:Disease) : Tile = struct
-  type tile_type = T.tile_type
-  let population = T.population
-  let infected = if T.infected = 0 then 0 else
-      let new_infected = (D.inner_tile_spread * T.population / 100) + T.infected in 
-      if new_infected > T.population then population else new_infected
-end 
+let infectTile (tile : Tile.t) (disease : Disease.t) : Tile.t =
+  match tile with
+  | Civ civ -> if civ.infected = 0 then Civ civ else 
+      let new_infected = (disease.inner_tile_spread * civ.population / 100) + civ.infected
+      in if new_infected > civ.population then Civ {civ with infected = civ.population}
+      else Civ {civ with infected = new_infected}
+  | _ -> tile
+

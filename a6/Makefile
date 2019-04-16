@@ -1,4 +1,4 @@
-MODULES=terminalPrint disease civilization tile
+MODULES=terminalPrint objects infection
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
@@ -26,7 +26,7 @@ finalcheck: check
 	bash finalcheck.sh
 
 zip:
-	zip adv.zip *.ml* *.json _tags Makefile
+	
 
 docs: docs-public docs-private
 
@@ -43,4 +43,4 @@ docs-private: build
 
 clean:
 	ocamlbuild -clean
-	rm -rf doc.public doc.private adv.zip
+	rm -rf doc.public doc.private 
