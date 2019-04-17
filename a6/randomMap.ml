@@ -3,7 +3,7 @@
 type tile = | Land | Water | Air | Bridge | Civ
 
 let length = 40
-let width= 40
+let width= 50
 
 let map = Array.make_matrix length width Land;;
 
@@ -24,7 +24,7 @@ let rec getCivilizations map n acc =
   let randy = Random.int (width-1) in 
   if randx= 0 || randx = (length-1) || randy = 0 || randy = (width-1) || map.(randx).(randy) = Civ || map.(randx+1).(randy) = Civ||
      map.(randx-1).(randy) = Civ|| map.(randx).(randy+1) = Civ || map.(randx).(randy-1) = Civ then getCivilizations map n acc else
-    let size = Random.int 10 in
+    let size = Random.int 20+10 in
     match n with
     | 0 -> acc
     | _ -> getCivilizations map (n-1) ( ((randx,randy), size):: acc)
@@ -53,6 +53,41 @@ let rec placeCivilizations map civs =
     placeCiv h;
     placeCivilizations map t
 
+
+let rec getBridges map civs staticciv=
+  match civs with
+  | [] -> ();
+  | h::t -> 
+    let rec connectCivs (coords,size) civs' = 
+      match civs' with 
+      | [] -> ();
+      | (c,s)::t ->
+        (let rec makeBridge (x1,y1) (x2,y2) =
+           if(x1<x2 && x1<length-1 ) then  
+             (if (map.(x1+1).(y1)=Civ) then makeBridge ((x1+1),y1) (x2,y2)
+              else map.(x1+1).(y1) <- Bridge; makeBridge (x1+1,y1) (x2,y2) )
+           else if (x1>x2 && x1>0) then 
+             (if (map.(x1-1).(y1) = Civ) then makeBridge ((x1-1),y1) (x2,y2)
+              else map.(x1-1).(y1) <- Bridge; makeBridge (x1-1,y1) (x2,y2))
+           else if (y1<y2 && y1<length-1) then 
+             (if (map.(x1).(y1+1) = Civ) then makeBridge (x1,(y1+1)) (x2,y2)
+              else map.(x1).(y1+1) <- Bridge; makeBridge (x1,(y1+1)) (x2,y2))
+           else if (y1>y2 && y2>0) then 
+             (if (map.(x1).(y1-1) = Civ) then makeBridge (x1,(y1-1)) (x2,y2)
+              else map.(x1).(y1-1) <- Bridge; makeBridge (x1,(y1-1)) (x2,y2))
+           else () in
+         makeBridge c coords; connectCivs (coords,size) t) in 
+
+
+
+    connectCivs h staticciv; getBridges map t staticciv
+
+
+
+
+
+
+
 let generateWaterCiv map = 
   let randx = Random.int (length-1) in
   let randy = Random.int (width-1) in
@@ -61,4 +96,28 @@ let generateWaterCiv map =
   placeRiverDown map (randx,randy);
 
   let civilizations = getCivilizations map 5 [] in
-  placeCivilizations map civilizations
+  placeCivilizations map civilizations;
+  getBridges map civilizations civilizations
+
+
+
+
+
+
+
+let printMap map = 
+  let rec printMap_helper  = function
+    | Land -> print_string "\027[40m  "; 
+    | Water -> print_string "\027[46m  "; 
+    | Bridge -> print_string "\027[0m  ";
+    | Civ -> print_string "\027[47m  "; in
+
+  let rec printMap_helper2 map count =
+    if (count = Array.length map) then  ( print_string "\027[0m\n \027[31mDone." )  else ( (Array.iter printMap_helper (Array.get map count)));  print_string "\027[0m\n"; printMap_helper2 map (count+1) 
+
+  in
+  printMap_helper2  map 0 
+
+
+
+
