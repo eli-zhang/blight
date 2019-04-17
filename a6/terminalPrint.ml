@@ -1,6 +1,8 @@
 open Objects 
 open State
 
+(** [print_map map time] prints the map [map] followed by the time [time]
+    elapsed so far in the world. *)
 let print_map map time = 
   let rec printMap_helper (tile: Tile.t) =
     let colors = true in
@@ -16,7 +18,7 @@ let print_map map time =
         let ratio = 100 * infected / population in
         if ratio > 0 then 
           if ratio = 100 then (print_string "\027[41m  ") else
-          if ratio = 66 then (print_string "\027[31m\027[47m::")
+          if ratio > 66 then (print_string "\027[31m\027[47m::")
           else (print_string "\027[31m\027[47m··")
         else (print_string "\027[47m  ";)
 
@@ -39,6 +41,8 @@ let print_map map time =
           print_string "\027[0m\n"; printMap_helper2 map (count+1) time)
   in (print_string "\027[0;0H"; printMap_helper2  map 0 time)
 
+(** [print_infected state] prints the total number of infected people in
+    the world given by state [state]. *)
 let print_infected (state: State.t) =
   let total_infected = 
     List.fold_left (fun acc (civ: Civilization.t) -> 
@@ -46,6 +50,8 @@ let print_infected (state: State.t) =
   print_endline("\027[31mTotal infected: " 
                 ^ string_of_int total_infected)
 
+(** [print_population state] prints the total number of people in the world
+    given by state [state]. *)
 let print_population (state: State.t) =
   let total_population =
     List.fold_left (fun acc (civ: Civilization.t) -> acc + civ.population) 
