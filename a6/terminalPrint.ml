@@ -1,7 +1,7 @@
 open Objects
 
 let printMap map = 
-  let rec printMap_helper  = function
+  let rec printMap_helper = function
     | Tile.Land -> print_string "\027[40m  "; 
     | Tile.Water -> print_string "\027[46m  "; 
     | Tile.Road -> print_string "\027[0m  ";

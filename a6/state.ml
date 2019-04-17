@@ -1,7 +1,9 @@
 open Objects
 
-type state = {
-  civilizations: civilization list;
-  disease: disease;
-  tiles: tile array array;
-}
+module State = struct
+  type t = {
+    civilizations: Civilization.t list;
+    disease: Disease.t;
+    tiles: Tile.t array array;
+  }
+end

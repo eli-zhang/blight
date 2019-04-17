@@ -1,14 +1,39 @@
 ### Starting build.
+# Target: objects.ml.depends, tags: { package(ANSITerminal), extension:ml, file:objects.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ANSITerminal -modules objects.ml > objects.ml.depends # cached
+# Target: objects.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:objects.cmo, file:objects.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ANSITerminal -o objects.cmo objects.ml # cached
 # Target: terminalPrint.ml.depends, tags: { package(ANSITerminal), extension:ml, file:terminalPrint.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ANSITerminal -modules terminalPrint.ml > terminalPrint.ml.depends
-# Target: objects.mli.depends, tags: { package(ANSITerminal), extension:mli, file:objects.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ANSITerminal -modules objects.mli > objects.mli.depends # cached
-# Target: objects.cmi, tags: { package(ANSITerminal), byte, compile, extension:mli, file:objects.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ANSITerminal -o objects.cmi objects.mli # cached
+ocamlfind ocamldep -package ANSITerminal -modules terminalPrint.ml > terminalPrint.ml.depends # cached
 # Target: terminalPrint.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:terminalPrint.cmo, file:terminalPrint.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ANSITerminal -o terminalPrint.cmo terminalPrint.ml
-+ ocamlfind ocamlc -c -package ANSITerminal -o terminalPrint.cmo terminalPrint.ml
-File "terminalPrint.ml", line 5, characters 6-15:
-Error: Unbound module Tile
+ocamlfind ocamlc -c -package ANSITerminal -o terminalPrint.cmo terminalPrint.ml # cached
+# Target: infection.ml.depends, tags: { package(ANSITerminal), extension:ml, file:infection.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ANSITerminal -modules infection.ml > infection.ml.depends # cached
+# Target: infection.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:infection.cmo, file:infection.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ANSITerminal -o infection.cmo infection.ml # cached
+# Target: controller.ml.depends, tags: { package(ANSITerminal), extension:ml, file:controller.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ANSITerminal -modules controller.ml > controller.ml.depends # cached
+# Target: controller.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:controller.cmo, file:controller.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ANSITerminal -o controller.cmo controller.ml # cached
+# Target: demomap.ml.depends, tags: { package(ANSITerminal), extension:ml, file:demomap.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ANSITerminal -modules demomap.ml > demomap.ml.depends # cached
+# Target: demomap.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:demomap.cmo, file:demomap.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ANSITerminal -o demomap.cmo demomap.ml # cached
+# Target: state.ml.depends, tags: { package(ANSITerminal), extension:ml, file:state.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ANSITerminal -modules state.ml > state.ml.depends
+# Target: state.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ANSITerminal -o state.cmo state.ml
+# Target: app.ml.depends, tags: { package(ANSITerminal), extension:ml, file:app.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ANSITerminal -modules app.ml > app.ml.depends
+# Target: randomMap.ml.depends, tags: { package(ANSITerminal), extension:ml, file:randomMap.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ANSITerminal -modules randomMap.ml > randomMap.ml.depends # cached
+# Target: randomMap.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:randomMap.cmo, file:randomMap.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ANSITerminal -o randomMap.cmo randomMap.ml # cached
+# Target: app.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:app.cmo, file:app.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ANSITerminal -o app.cmo app.ml
++ ocamlfind ocamlc -c -package ANSITerminal -o app.cmo app.ml
+File "app.ml", line 40, characters 36-44:
+Error: Unbound value run_game
+Hint: Did you mean rename?
 Command exited with code 2.
 # Compilation unsuccessful.
