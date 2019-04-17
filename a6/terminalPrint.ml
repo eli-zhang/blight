@@ -1,4 +1,5 @@
 open Objects 
+open State
 
 let printMap map time = 
   let rec printMap_helper (tile: Tile.t) =
@@ -34,6 +35,10 @@ let printMap map time =
   let rec printMap_helper2 map count time =
     if count = (Array.length map) then 
       (print_endline ("\027[0m\n\027[31mElapsed Time: " ^ (string_of_int time)))
-    else (Array.iter printMap_helper (Array.get map count);  
+    else (Array.iter printMap_helper (Array.get map count); 
           print_string "\027[0m\n"; printMap_helper2 map (count+1) time)
   in (print_string "\027[0;0H"; printMap_helper2  map 0 time)
+
+(* let print_population (state: State.t) =
+   let total_population = 
+    List.fold_left (fun acc civ -> acc + !(civ.infected)) 0 state.civilizations *)
