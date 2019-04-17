@@ -10,7 +10,7 @@ module State = struct
 end
 
 let starting_state = 
-  let civ1 = Civilization.{infected = ref 0; population= 62500; neighbors= []} in
+  let civ1 = Civilization.{infected = ref 0; population = 80000; neighbors= []} in
   let map = Array.make_matrix 20 40
       Tile.{tile_type = (Civ civ1); infected = 0; population = 100} in
   let disease = Disease.{inner_tile_spread = 5; 

@@ -1,6 +1,7 @@
 open Objects 
+open State
 
-let printMap map time = 
+let print_map map time = 
   let rec printMap_helper (tile: Tile.t) =
     let colors = true in
     if colors then 
@@ -25,13 +26,29 @@ let printMap map time =
       | Land -> print_string "\027[40m L"; 
       | Water -> print_string "\027[46m W"; 
       | Road -> print_string "\027[0m R";
-      | Civ civ -> let infected = tile.infected in let population = tile.population in
+      | Civ civ -> 
+        let infected = tile.infected in 
+        let population = tile.population in
         print_string ("I: " ^ string_of_int infected 
                       ^ " P: " ^ string_of_int population ^ " "); in
 
   let rec printMap_helper2 map count time =
     if count = (Array.length map) then 
-      (print_endline ("\027[0m\n\027[31mElapsed Time: " ^ (string_of_int time)))
-    else (Array.iter printMap_helper (Array.get map count);  
+      (print_endline ("\027[31mElapsed Time: " ^ (string_of_int time)))
+    else (Array.iter printMap_helper (Array.get map count); 
           print_string "\027[0m\n"; printMap_helper2 map (count+1) time)
   in (print_string "\027[0;0H"; printMap_helper2  map 0 time)
+
+let print_infected (state: State.t) =
+  let total_infected = 
+    List.fold_left (fun acc (civ: Civilization.t) -> 
+        acc + !(civ.infected)) 0 state.civilizations in
+  print_endline("\027[31mTotal infected: " 
+                ^ string_of_int total_infected)
+
+let print_population (state: State.t) =
+  let total_population =
+    List.fold_left (fun acc (civ: Civilization.t) -> acc + civ.population) 
+      0 state.civilizations in
+  print_endline("\027[31mTotal population: "
+                ^ string_of_int total_population)

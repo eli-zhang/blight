@@ -4,7 +4,9 @@ let startTileInfection (tile : Tile.t): Tile.t =
   match tile.tile_type with
   | Civ civ -> if !(civ.infected) = 0 
     then (civ.infected := 1; {tile with infected = 1})
-    else if tile.infected = 0 then {tile with infected = 1}
+    else if tile.infected = 0 then 
+      ((civ.infected := !(civ.infected) + 1);
+       {tile with infected = 1})
     else tile
   | _ -> tile
 
