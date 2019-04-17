@@ -1,11 +1,12 @@
 open Objects
 
 let printMap map = 
-  let rec printMap_helper = function
-    | Tile.Land -> print_string "\027[40m  "; 
-    | Tile.Water -> print_string "\027[46m  "; 
-    | Tile.Road -> print_string "\027[0m  ";
-    | Tile.Civ t -> print_string "\027[47m  "; in
+  let printMap_helper (tile: Tile.t) = 
+    match tile.tile_type with
+    | Land -> print_string "\027[40m  "; 
+    | Water -> print_string "\027[46m  "; 
+    | Road -> print_string "\027[0m  ";
+    | Civ t -> print_string "\027[47m  "; in
 
   let rec printMap_helper2 map count =
     if count = (Array.length map) then  ( print_string "\027[0m\n \027[31mDone." )  
