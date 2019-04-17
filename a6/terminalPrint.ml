@@ -1,4 +1,4 @@
-(* open Objects  *)
+open Objects 
 
 let printMap map = 
   let rec printMap_helper (tile: Tile.t) =

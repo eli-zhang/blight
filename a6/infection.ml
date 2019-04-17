@@ -22,15 +22,25 @@ let check_neighbors (tiles: Tile.t array array) row column (disease: Disease.t) 
   let tile = tiles.(row).(column) in
   match tile.tile_type with
   | Civ total_infected -> if tile.infected > 0 && tile.infected < tile.population then
-      if tile.infected / tile.population * 100 > disease.tile_to_tile_spread then
-        tiles.(row - 1).(column - 1) <- startTileInfection (tiles.(row - 1).(column - 1));
-    tiles.(row - 1).(column) <- startTileInfection (tiles.(row - 1).(column));
-    tiles.(row - 1).(column + 1) <- startTileInfection (tiles.(row - 1).(column + 1));
-    tiles.(row).(column - 1) <- startTileInfection (tiles.(row).(column - 1));
-    tiles.(row).(column + 1) <- startTileInfection (tiles.(row).(column + 1));
-    tiles.(row + 1).(column) <- startTileInfection (tiles.(row + 1).(column));
-    tiles.(row + 1).(column + 1) <- startTileInfection (tiles.(row + 1).(column + 1));
-    tiles.(row + 1).(column - 1) <- startTileInfection (tiles.(row + 1).(column - 1));	
+      if 100 * tile.infected / tile.population > disease.tile_to_tile_spread then
+        begin
+          if row > 0 && column > 0 then
+            tiles.(row - 1).(column - 1) <- startTileInfection (tiles.(row - 1).(column - 1));
+          if row > 0 then
+            tiles.(row - 1).(column) <- startTileInfection (tiles.(row - 1).(column));
+          if row > 0 && column < 5 then
+            tiles.(row - 1).(column + 1) <- startTileInfection (tiles.(row - 1).(column + 1));
+          if (column > 0) then
+            tiles.(row).(column - 1) <- startTileInfection (tiles.(row).(column - 1));
+          if (column < 5) then
+            tiles.(row).(column + 1) <- startTileInfection (tiles.(row).(column + 1));
+          if (row < 5) then
+            tiles.(row + 1).(column) <- startTileInfection (tiles.(row + 1).(column));
+          if row < 5 && column < 5 then
+            tiles.(row + 1).(column + 1) <- startTileInfection (tiles.(row + 1).(column + 1));
+          if row < 5 && column > 0 then
+            tiles.(row + 1).(column - 1) <- startTileInfection (tiles.(row + 1).(column - 1));
+        end	
   | _ -> ()
 
 let infectMap (map : Tile.t array array) (xy: int * int) = 
