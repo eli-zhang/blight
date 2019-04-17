@@ -27,7 +27,6 @@ let rec start_game (start : string list) =
   try let xy = List.map int_of_string start in if List.length start <> 2 
     then print_error_retry else try run_game (*generate map*) with Too_Big ->
       print_too_big
-
   with Failure string -> print_error_retry
 
 
