@@ -1,12 +1,11 @@
 open Objects
 
-
-let startTileInfection (tile : Tile.t): Tile.t =
+let startTileInfection (tile : tile): tile =
   match tile with
-  | Civ civ -> if civ.infected = 0 then Civ {civ with infected = 1} else Civ civ
+  | (Civ civ) -> if civ.infected = 0 then Civ {civ with infected = 1} else Civ civ
   | _ -> tile
 
-let infectTile (tile : Tile.t) (disease : Disease.t) : Tile.t =
+let infectTile (tile : tile) (disease : tile) : tile =
   match tile with
   | Civ civ -> if civ.infected = 0 then Civ civ else 
       let new_infected = (disease.inner_tile_spread * civ.population / 100) + civ.infected
@@ -14,5 +13,5 @@ let infectTile (tile : Tile.t) (disease : Disease.t) : Tile.t =
       else Civ {civ with infected = new_infected}
   | _ -> tile
 
-let infectMap (map : Tile.t array array) (xy: int * int) = 
+let infectMap (map : tile array array) (xy: int * int) = 
   startTileInfection map.(fst xy).(snd xy)
