@@ -25,27 +25,30 @@ let check_neighbors (tiles: Tile.t array array) row column (disease: Disease.t) 
   let rows = Array.length tiles - 1 in
   let cols = Array.length tiles.(0) - 1 in
 
+  let random_check threshold =
+    (Random.int 100) + 1 < threshold in
+
   match tile.tile_type with
   | Civ total_infected -> if tile.infected > 0 && tile.infected < tile.population then
       if 100 * tile.infected / tile.population > disease.tile_to_tile_spread then
         begin
           print_endline ("Row: " ^ string_of_int row);
           print_endline ("Column: " ^ string_of_int column);
-          if row > 0 && column > 0 then
+          if row > 0 && column > 0 && random_check disease.spread_probability then
             tiles.(row - 1).(column - 1) <- startTileInfection (tiles.(row - 1).(column - 1));
-          if row > 0 then
+          if row > 0 && random_check disease.spread_probability then
             tiles.(row - 1).(column) <- startTileInfection (tiles.(row - 1).(column));
-          if row > 0 && column < cols then
+          if row > 0 && column < cols && random_check disease.spread_probability then
             tiles.(row - 1).(column + 1) <- startTileInfection (tiles.(row - 1).(column + 1));
-          if (column > 0) then
+          if (column > 0) && random_check disease.spread_probability then
             tiles.(row).(column - 1) <- startTileInfection (tiles.(row).(column - 1));
-          if (column < cols) then
+          if (column < cols) && random_check disease.spread_probability then
             tiles.(row).(column + 1) <- startTileInfection (tiles.(row).(column + 1));
-          if (row < rows) then
+          if (row < rows) && random_check disease.spread_probability then
             tiles.(row + 1).(column) <- startTileInfection (tiles.(row + 1).(column));
-          if row < rows && column < cols then
+          if row < rows && column < cols && random_check disease.spread_probability then
             tiles.(row + 1).(column + 1) <- startTileInfection (tiles.(row + 1).(column + 1));
-          if row < rows && column > 0 then
+          if row < rows && column > 0 && random_check disease.spread_probability then
             tiles.(row + 1).(column - 1) <- startTileInfection (tiles.(row + 1).(column - 1));
         end	
   | _ -> ()

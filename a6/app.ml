@@ -21,8 +21,8 @@ let rec run_game (st: State.t) =
   let disease = st.disease in
   let tiles = st.tiles in
 
-  (for x = 0 to 4 do
-     for y = 0 to 4 do
+  (for x = 0 to Array.length tiles - 1 do
+     for y = 0 to Array.length tiles.(x) - 1 do
        check_neighbors tiles x y disease;
        tiles.(x).(y) <- infectTile (tiles.(x).(y))(disease);
      done

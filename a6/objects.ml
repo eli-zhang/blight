@@ -3,6 +3,7 @@ module Disease = struct
     inner_tile_spread : int;
     tile_to_tile_spread : int;
     civ_to_civ_spread : int;
+    spread_probability : int;
   }
 end 
 
