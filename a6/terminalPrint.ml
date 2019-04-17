@@ -25,7 +25,9 @@ let printMap map time =
       | Land -> print_string "\027[40m L"; 
       | Water -> print_string "\027[46m W"; 
       | Road -> print_string "\027[0m R";
-      | Civ civ -> let infected = tile.infected in let population = tile.population in
+      | Civ civ -> 
+        let infected = tile.infected in 
+        let population = tile.population in
         print_string ("I: " ^ string_of_int infected 
                       ^ " P: " ^ string_of_int population ^ " "); in
 

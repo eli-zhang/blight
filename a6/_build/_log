@@ -14,13 +14,13 @@ ocamlfind ocamlc -c -package ANSITerminal -o objects.cmo objects.ml # cached
 # Target: infection.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:infection.cmo, file:infection.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -package ANSITerminal -o infection.cmo infection.ml # cached
 # Target: state.ml.depends, tags: { package(ANSITerminal), extension:ml, file:state.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ANSITerminal -modules state.ml > state.ml.depends # cached
-# Target: state.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ANSITerminal -o state.cmo state.ml # cached
+ocamlfind ocamldep -package ANSITerminal -modules state.ml > state.ml.depends
 # Target: terminalPrint.ml.depends, tags: { package(ANSITerminal), extension:ml, file:terminalPrint.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ANSITerminal -modules terminalPrint.ml > terminalPrint.ml.depends
+ocamlfind ocamldep -package ANSITerminal -modules terminalPrint.ml > terminalPrint.ml.depends # cached
 # Target: terminalPrint.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:terminalPrint.cmo, file:terminalPrint.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ANSITerminal -o terminalPrint.cmo terminalPrint.ml
+ocamlfind ocamlc -c -package ANSITerminal -o terminalPrint.cmo terminalPrint.ml # cached
+# Target: state.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ANSITerminal -o state.cmo state.ml
 # Target: app.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:app.cmo, file:app.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -package ANSITerminal -o app.cmo app.ml # cached
 # Target: app.byte, tags: { package(ANSITerminal), byte, dont_link_with, extension:byte, file:app.byte, link, ocaml, program, quiet, traverse }
