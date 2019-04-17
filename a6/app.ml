@@ -31,35 +31,45 @@ let rec run_game (st: State.t) =
   Unix.sleepf 0.1;
   run_game {st with elapsed_time = st.elapsed_time + 1}
 
-(* let rec start_game (start : string list) =
-   let print_error_retry = ANSITerminal.(print_string [red] "You need to input two numbers!\n"); 
-    print_string "> ";
-    match read_line () with
-    | exception End_of_file -> ()
-    | input -> start_game (string_to_list input) in
-   let print_too_big = ANSITerminal.(print_string [red] "The coordinates are over the map!\n"); 
-    print_string "> ";
-    match read_line () with
-    | exception End_of_file -> ()
-    | input -> start_game (string_to_list input) in
-   try let xy = List.map int_of_string start in if List.length start <> 2 
-    then print_error_retry else try run_game starting_state with Too_Big ->
-      print_too_big
-   with Failure string -> print_error_retry *)
+let rec start_game (start_coordinates : string) =
+  (* let print_error_retry = ANSITerminal.(print_string [red] "You need two numbers!\n"); 
+     print_string "> ";
+     match read_line () with
+     | exception End_of_file -> ()
+     | input -> start_game input in
+     let print_incorrect_format = ANSITerminal.(print_string [red] "Incorrect format!\n"); 
+     print_string "> ";
+     match read_line () with
+     | exception End_of_file -> ()
+     | input -> start_game input in *)
+  (* let print_too_big = ANSITerminal.(print_string [red] "The coordinates are over the map!\n"); 
+     print_string "> ";
+     match read_line () with
+     | exception End_of_file -> ()
+     | input -> start_game input in *)
+  let xy = List.map int_of_string (string_to_list start_coordinates) in
+  print_endline (string_of_int (List.length xy));
+  if List.length xy <> 2 then print_string "zoo" else 
+    let x = List.hd xy in
+    let y = List.nth xy 1 in
+    print_endline (string_of_int x);
+    print_endline (string_of_int y);
+    let state_with_coordinates = 
+      starting_state.tiles.(x).(y) <- startTileInfection starting_state.tiles.(x).(y);
+      starting_state in
+    run_game state_with_coordinates
+(* with Failure string -> print_incorrect_format *)
 
 
 let main () = 
-  (* ANSITerminal.(print_string [red]
+  print_string "\027[2J";
+  ANSITerminal.(print_string [red]
                   "\n\nWelcome to our game.\n");
-     print_string "> ";
-     print_string "\027[2J";
-     print_string "random print statement"; *)
-  run_game starting_state
-(* match read_line () with
-   | exception End_of_file -> ()
-   | input -> (print_string "\027[2J";
-            run_game starting_state)
-             run_game starting_state *)
+  print_endline "Enter the starting coordinates in the form \"x y\"";
+  print_string "> ";
+  match read_line () with
+  | exception End_of_file -> ()
+  | input -> start_game input
 
 
 let () = main ()

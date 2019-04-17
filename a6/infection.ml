@@ -22,25 +22,30 @@ let infectTile (tile : Tile.t) (disease : Disease.t) : Tile.t =
 
 let check_neighbors (tiles: Tile.t array array) row column (disease: Disease.t) =
   let tile = tiles.(row).(column) in
+  let rows = Array.length tiles - 1 in
+  let cols = Array.length tiles.(0) - 1 in
+
   match tile.tile_type with
   | Civ total_infected -> if tile.infected > 0 && tile.infected < tile.population then
       if 100 * tile.infected / tile.population > disease.tile_to_tile_spread then
         begin
+          print_endline ("Row: " ^ string_of_int row);
+          print_endline ("Column: " ^ string_of_int column);
           if row > 0 && column > 0 then
             tiles.(row - 1).(column - 1) <- startTileInfection (tiles.(row - 1).(column - 1));
           if row > 0 then
             tiles.(row - 1).(column) <- startTileInfection (tiles.(row - 1).(column));
-          if row > 0 && column < 5 then
+          if row > 0 && column < cols then
             tiles.(row - 1).(column + 1) <- startTileInfection (tiles.(row - 1).(column + 1));
           if (column > 0) then
             tiles.(row).(column - 1) <- startTileInfection (tiles.(row).(column - 1));
-          if (column < 5) then
+          if (column < cols) then
             tiles.(row).(column + 1) <- startTileInfection (tiles.(row).(column + 1));
-          if (row < 5) then
+          if (row < rows) then
             tiles.(row + 1).(column) <- startTileInfection (tiles.(row + 1).(column));
-          if row < 5 && column < 5 then
+          if row < rows && column < cols then
             tiles.(row + 1).(column + 1) <- startTileInfection (tiles.(row + 1).(column + 1));
-          if row < 5 && column > 0 then
+          if row < rows && column > 0 then
             tiles.(row + 1).(column - 1) <- startTileInfection (tiles.(row + 1).(column - 1));
         end	
   | _ -> ()
