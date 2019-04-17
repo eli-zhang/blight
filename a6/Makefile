@@ -1,4 +1,4 @@
-MODULES=terminalPrint objects infection controller app randomMap demomap
+MODULES=terminalPrint objects infection controller app randomMap demomap state
 OBJECTS=$(MODULES:=.cmo) 
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
