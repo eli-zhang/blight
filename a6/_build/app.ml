@@ -13,7 +13,9 @@ let string_to_list str =
 let rec run_game (st: State.t) =
   (* let civilizations = st.civilizations in *)
   print_string "\x1Bc";
-  TerminalPrint.printMap st.tiles st.elapsed_time;
+  TerminalPrint.print_map st.tiles st.elapsed_time;
+  TerminalPrint.print_infected st;
+  TerminalPrint.print_population st;
   flush Pervasives.stdout;
   (* match read_line() with
      | exception End_of_file -> ()
