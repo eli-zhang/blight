@@ -20,20 +20,13 @@ ocamlfind ocamldep -package ANSITerminal -modules demomap.ml > demomap.ml.depend
 # Target: demomap.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:demomap.cmo, file:demomap.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -package ANSITerminal -o demomap.cmo demomap.ml # cached
 # Target: state.ml.depends, tags: { package(ANSITerminal), extension:ml, file:state.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ANSITerminal -modules state.ml > state.ml.depends
+ocamlfind ocamldep -package ANSITerminal -modules state.ml > state.ml.depends # cached
 # Target: state.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ANSITerminal -o state.cmo state.ml
+ocamlfind ocamlc -c -package ANSITerminal -o state.cmo state.ml # cached
 # Target: app.ml.depends, tags: { package(ANSITerminal), extension:ml, file:app.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package ANSITerminal -modules app.ml > app.ml.depends
-# Target: randomMap.ml.depends, tags: { package(ANSITerminal), extension:ml, file:randomMap.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ANSITerminal -modules randomMap.ml > randomMap.ml.depends # cached
-# Target: randomMap.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:randomMap.cmo, file:randomMap.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ANSITerminal -o randomMap.cmo randomMap.ml # cached
-# Target: app.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:app.cmo, file:app.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ANSITerminal -o app.cmo app.ml
-+ ocamlfind ocamlc -c -package ANSITerminal -o app.cmo app.ml
-File "app.ml", line 40, characters 36-44:
-Error: Unbound value run_game
-Hint: Did you mean rename?
++ ocamlfind ocamldep -package ANSITerminal -modules app.ml > app.ml.depends
+File "app.ml", line 25, characters 4-12:
+Error: Syntax error
 Command exited with code 2.
 # Compilation unsuccessful.

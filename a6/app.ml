@@ -10,19 +10,19 @@ let string_to_list str =
   let command_list = (String.split_on_char ' ' str) in 
   List.filter (fun ele -> ele <> "") command_list
 
-(* let rec run_game (st: State.state) =
-   let civilizations = state.civilizations in
-   let disease = state.disease in
-   let tiles = state.tiles in
+let rec run_game (st: State.t) =
+  (* let civilizations = st.civilizations in *)
+  let disease = st.disease in
+  let tiles = st.tiles in
 
-   for x = 0 to 100 do
+  for x = 0 to 100 do
     for y = 0 to 100 do
-      tiles.(x).(y) := InfectTile(tiles.(x).(y))(disease);
       check_neighbors tiles x y disease;
+      tiles.(x).(y) <- infectTile (tiles.(x).(y))(disease);
     done
-   done
-   let updated_civilizations = infect_civilizations [] civilizations disease in
-   run_game (state with civilizations = updated_civilizations) *)
+  done
+    (* let updated_civilizations = infect_civilizations [] civilizations disease in *)
+    run_game st
 
 
 let rec start_game (start : string list) =
