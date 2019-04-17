@@ -1,6 +1,6 @@
 ### Starting build.
 # Target: app.ml.depends, tags: { package(ANSITerminal), extension:ml, file:app.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ANSITerminal -modules app.ml > app.ml.depends
+ocamlfind ocamldep -package ANSITerminal -modules app.ml > app.ml.depends # cached
 # Target: controller.ml.depends, tags: { package(ANSITerminal), extension:ml, file:controller.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package ANSITerminal -modules controller.ml > controller.ml.depends # cached
 # Target: controller.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:controller.cmo, file:controller.ml, implem, ocaml, quiet, traverse }
@@ -18,9 +18,9 @@ ocamlfind ocamldep -package ANSITerminal -modules state.ml > state.ml.depends # 
 # Target: state.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -package ANSITerminal -o state.cmo state.ml # cached
 # Target: terminalPrint.ml.depends, tags: { package(ANSITerminal), extension:ml, file:terminalPrint.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package ANSITerminal -modules terminalPrint.ml > terminalPrint.ml.depends # cached
+ocamlfind ocamldep -package ANSITerminal -modules terminalPrint.ml > terminalPrint.ml.depends
 # Target: terminalPrint.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:terminalPrint.cmo, file:terminalPrint.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package ANSITerminal -o terminalPrint.cmo terminalPrint.ml # cached
+ocamlfind ocamlc -c -package ANSITerminal -o terminalPrint.cmo terminalPrint.ml
 # Target: app.cmo, tags: { package(ANSITerminal), byte, compile, extension:cmo, extension:ml, file:app.cmo, file:app.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -package ANSITerminal -o app.cmo app.ml
 # Target: app.byte, tags: { package(ANSITerminal), byte, dont_link_with, extension:byte, file:app.byte, link, ocaml, program, quiet, traverse }

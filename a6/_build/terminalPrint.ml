@@ -1,6 +1,6 @@
 open Objects 
 
-let printMap map = 
+let printMap map time = 
   let rec printMap_helper (tile: Tile.t) =
     match tile.tile_type with
     | Land -> print_string "\027[40m  "; 
@@ -12,8 +12,8 @@ let printMap map =
         else (print_string "\027[31m\027[47m··")
       else (print_string "\027[47m  ";) in 
 
-  let rec printMap_helper2 map count =
-    if count = (Array.length map) then  ( print_string "\027[0m\n \027[31mDone." )  
+  let rec printMap_helper2 map count time =
+    if count = (Array.length map) then  ( print_string ("\027[0m\n\027[31mElapsed Time: " ^ (string_of_int time)))
     else (Array.iter printMap_helper (Array.get map count);  
-          print_string "\027[0m\n"; printMap_helper2 map (count+1) )
-  in (print_string "\027[0;0H"; printMap_helper2  map 0 )
+          print_string "\027[0m\n"; printMap_helper2 map (count+1) time)
+  in (print_string "\027[0;0H"; printMap_helper2  map 0 time)

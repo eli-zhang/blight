@@ -10,12 +10,14 @@ let startTileInfection (tile : Tile.t): Tile.t =
 
 let infectTile (tile : Tile.t) (disease : Disease.t) : Tile.t =
   match tile.tile_type with
-  | Civ civ -> if !(civ.infected) = 0 then tile else 
-      let new_infected = (disease.inner_tile_spread * civ.population / 100) 
-                         + !(civ.infected) in
-      if new_infected > civ.population 
-      then (civ.infected := civ.population; tile)
-      else (civ.infected := new_infected; tile)
+  | Civ civ -> if tile.infected = 0 then tile else 
+      let new_infected = (disease.inner_tile_spread * tile.population / 100) 
+                         + tile.infected in
+      if new_infected > tile.population 
+      then (civ.infected := !(civ.infected) + tile.population - tile.infected; 
+            {tile with infected = tile.population})
+      else (civ.infected := !(civ.infected) + new_infected - tile.infected;
+            {tile with infected = new_infected})
   | _ -> tile
 
 let check_neighbors (tiles: Tile.t array array) row column (disease: Disease.t) =

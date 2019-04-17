@@ -12,7 +12,12 @@ let string_to_list str =
 
 let rec run_game (st: State.t) =
   (* let civilizations = st.civilizations in *)
-  TerminalPrint.printMap st.tiles;
+  print_string "\x1Bc";
+  TerminalPrint.printMap st.tiles st.elapsed_time;
+  flush Pervasives.stdout;
+  (* match read_line() with
+     | exception End_of_file -> ()
+     | input -> *)
   let disease = st.disease in
   let tiles = st.tiles in
 
@@ -23,7 +28,8 @@ let rec run_game (st: State.t) =
      done
    done);
   (* let updated_civilizations = infect_civilizations [] civilizations disease in *)
-  run_game st
+  Unix.sleepf 0.1;
+  run_game {st with elapsed_time = st.elapsed_time + 1}
 
 (* let rec start_game (start : string list) =
    let print_error_retry = ANSITerminal.(print_string [red] "You need to input two numbers!\n"); 
@@ -44,17 +50,16 @@ let rec run_game (st: State.t) =
 
 let main () = 
   (* ANSITerminal.(print_string [red]
-                  "\n\nWelcome to our game.\n"); *)
-  (* print_string "> ";
-     (* print_string "\027[2J"; *)
-     print_string "random print statement";
-     run_game starting_state *)
-  (* match read_line () with
-     | exception End_of_file -> ()
-     | input -> (print_string "\027[2J";
-              run_game starting_state) *)
-  print_string "\027[2J";
+                  "\n\nWelcome to our game.\n");
+     print_string "> ";
+     print_string "\027[2J";
+     print_string "random print statement"; *)
   run_game starting_state
+(* match read_line () with
+   | exception End_of_file -> ()
+   | input -> (print_string "\027[2J";
+            run_game starting_state)
+             run_game starting_state *)
 
 
 let () = main ()
