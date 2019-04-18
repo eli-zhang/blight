@@ -43,7 +43,7 @@ let check_neighbors (tiles: Tile.t array array) row column (disease: Disease.t) 
 
   match tile.tile_type with
   | Civ total_infected -> if tile.infected > 0 then
-      if 100 * tile.infected / tile.population > disease.tile_to_tile_spread then
+      if 100 * tile.infected / tile.population >= disease.tile_to_tile_spread then
         begin
           if row > 0 && column > 0 && random_check disease.spread_probability then
             tiles.(row - 1).(column - 1) <- start_tile_infection (tiles.(row - 1).(column - 1));

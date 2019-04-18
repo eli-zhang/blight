@@ -71,16 +71,49 @@ let rec start_game (state: State.t) (start_coordinates : string) =
     | exception End_of_file -> ()
     | input -> start_game state input
 
+let rec setup_disease =
+  print_string "\x1Bc";
+  print_endline "Enter your map size in the form \"height length\": ";
+  print_string "> ";
+  let map_size = read_line () in
+  let xy = List.map int_of_string (string_to_list map_size) in
+
+  print_endline "Enter inner tile spread: ";
+  print_string "> ";
+  let inner_tile_spread = int_of_string (read_line ()) in
+
+  print_endline "Enter tile to tile spread: ";
+  print_string "> ";
+  let tile_to_tile_spread = int_of_string (read_line ()) in
+
+  print_endline "Enter spread probability: ";
+  print_string "> ";
+  let spread_probability = int_of_string (read_line ()) in
+
+  print_endline "Enter the starting coordinates in the form \"x y\"";
+  print_string "> ";
+  let starting_coordinates = read_line () in
+
+  let state = 
+    let civ1 = 
+      Civilization.{infected = ref 0; 
+                    population = 100 * (List.hd xy) * (List.nth xy 1); 
+                    neighbors= []} in
+    let map = Array.make_matrix (List.hd xy) (List.nth xy 1)
+        Tile.{tile_type = (Civ civ1); infected = 0; population = 100} in
+    let disease = Disease.{inner_tile_spread = inner_tile_spread; 
+                           tile_to_tile_spread = tile_to_tile_spread; 
+                           civ_to_civ_spread = 0;
+                           spread_probability = spread_probability} in
+    State.{civilizations = [civ1]; 
+           disease = disease; 
+           tiles = map; 
+           elapsed_time = 0} in
+  start_game state starting_coordinates
+
 (** [main ()] starts the game and prompts the user for the starting coordinates
     of the disease. *)
 let main () = 
-  print_string "\027[2J";
-  ANSITerminal.(print_string [red]
-                  "\n\nWelcome to our game.\n");
-  print_endline "Enter the starting coordinates in the form \"x y\"";
-  print_string "> ";
-  match read_line () with
-  | exception End_of_file -> ()
-  | input -> start_game starting_state input
+  setup_disease
 
 let () = main ()
