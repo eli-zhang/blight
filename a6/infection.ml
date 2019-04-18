@@ -36,7 +36,7 @@ let infect_tile (tile : Tile.t) (disease : Disease.t) : Tile.t =
 let check_neighbors (tiles: Tile.t array array) row column (disease: Disease.t) =
   let tile = tiles.(row).(column) in
   let rows = Array.length tiles - 1 in
-  let cols = Array.length tiles.(0) - 1 in
+  let cols = Array.length tiles.(row) - 1 in
 
   let random_check threshold =
     (Random.int 100) + 1 < threshold in
