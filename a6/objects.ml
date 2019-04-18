@@ -1,4 +1,7 @@
+(** Represents the disease the user places into the world. *)
 module Disease = struct
+  (** Tracks information about the disease's spread probability within a tile,
+      between tiles, between civilizations, and chance of tile-to-tile spread.*)
   type t = {
     inner_tile_spread : int;
     tile_to_tile_spread : int;
@@ -7,7 +10,10 @@ module Disease = struct
   }
 end 
 
+(** Represents a civilization that contains civilization tiles. *)
 module Civilization = struct
+  (** Tracks a civilization's total information: total number of infected
+      people, total population, and neighboring civilizations. *)
   type t = {
     infected : int ref;
     population : int;
@@ -15,8 +21,12 @@ module Civilization = struct
   }
 end
 
+(** Represents a tile in the world/map. *)
 module Tile = struct
+  (** The type of the tile *)
   type tile_types = Civ of Civilization.t | Land | Water | Road
+  (** Tracks information about the tile, like its type, number of people
+      infected in the tile, and the total number of people in the tile.*)
   type t = {
     tile_type : tile_types;
     infected : int;
