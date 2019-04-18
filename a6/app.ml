@@ -40,7 +40,6 @@ let rec run_game (st: State.t) =
 let rec start_game (state: State.t) (start_coordinates : string) =
   let string_list = string_to_list start_coordinates in
   try let xy = List.map int_of_string string_list in
-    print_endline (string_of_int (List.length xy));
     if List.length xy <> 2 
     then (print_endline "\027[31mYou need exactly two numbers!\027[0m";
           print_string "> ";
@@ -51,11 +50,12 @@ let rec start_game (state: State.t) (start_coordinates : string) =
       let x = List.hd xy in
       let y = List.nth xy 1 in
       if (Array.length state.tiles > x) && (Array.length state.tiles.(x) > y)
+      || (x > 0) || (y > 0)
       then 
         let state_with_coordinates = 
           state.tiles.(x).(y) 
           <- start_tile_infection state.tiles.(x).(y);
-          starting_state in
+          state in
         run_game state_with_coordinates
       else
         (print_endline "\027[31mCoordinates are out of bounds!\027[0m";
@@ -63,6 +63,7 @@ let rec start_game (state: State.t) (start_coordinates : string) =
          match read_line () with
          | exception End_of_file -> ()
          | input -> start_game state input)
+
   with Failure string -> 
     print_endline "\027[31mMake sure you enter two integers!\027[0m";
     print_string "> ";
@@ -80,6 +81,6 @@ let main () =
   print_string "> ";
   match read_line () with
   | exception End_of_file -> ()
-  | input -> start_game starting_state input
+  | input -> start_game advanced_starting_state input
 
 let () = main ()
