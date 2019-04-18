@@ -81,6 +81,6 @@ let main () =
   print_string "> ";
   match read_line () with
   | exception End_of_file -> ()
-  | input -> start_game advanced_starting_state input
+  | input -> start_game starting_state input
 
 let () = main ()

@@ -1,14 +1,9 @@
-
-
-type tile = | Land | Water | Air | Bridge | Civ
+type tile = | Land | Water | Bridge | Civ
 
 let length = 40
 let width= 50
 
 let map = Array.make_matrix length width Land;;
-
-
-
 
 (** [getCivilizations map n acc] returns a list with length n that represents civilizations *)
 let rec getCivilizations map n acc =
@@ -20,9 +15,6 @@ let rec getCivilizations map n acc =
     match n with
     | 0 -> acc
     | _ -> getCivilizations map (n-1) ( ((randx,randy), size):: acc)
-
-
-
 
 (** [placeCivilizations map civs] indexes the matrix map with civilization tiles using the
     information in civs  *)
@@ -64,23 +56,15 @@ let rec getBridges map civs staticciv=
            else if (x1>x2 && x1>0) then 
              (if (map.(x1-1).(y1) = Civ) then makeBridge ((x1-1),y1) (x2,y2)
               else map.(x1-1).(y1) <- Bridge; makeBridge (x1-1,y1) (x2,y2))
-           else if (y1<y2 && y1<length-1) then 
+           else if (y1<y2 && y1<width-1) then 
              (if (map.(x1).(y1+1) = Civ) then makeBridge (x1,(y1+1)) (x2,y2)
               else map.(x1).(y1+1) <- Bridge; makeBridge (x1,(y1+1)) (x2,y2))
-           else if (y1>y2 && y2>0) then 
+           else if (y1>y2 && y1>0) then 
              (if (map.(x1).(y1-1) = Civ) then makeBridge (x1,(y1-1)) (x2,y2)
               else map.(x1).(y1-1) <- Bridge; makeBridge (x1,(y1-1)) (x2,y2))
            else () in
          makeBridge c coords; connectCivs (coords,size) t) in 
-
-
-
     connectCivs h staticciv; getBridges map t staticciv
-
-
-
-
-
 
 (**[generateWaterCiv map] simply indexes the matrix map with the water, bridges, and civ tiles
    in the correct spots *)
@@ -96,7 +80,7 @@ let generateWaterCiv map =
     if(x<1 || y<2 ||x>(length-1) ||y>(width-1)) then () else placeRiverDown map (x-1,y-1) in
   let randx = Random.int (length-1) in
   let randy = Random.int (width-1) in
-  let nofciv = (Random.int 30) +10 in
+  (* let nofciv = (Random.int 30) +10 in *)
   placeRiverUp map (randx,randy);
   placeRiverDown map (randx,randy);
 
