@@ -35,7 +35,7 @@ let tile_map1 = Tile.{
 
 let civ_map3 = Civilization.{
     infected=ref 0;
-    population=3;
+    population=9;
     neighbors=[]
   }
 
@@ -45,17 +45,16 @@ let tile_map3 = Tile.{
     population=1
   }
 
-let tile2 = start_tile_infection tile1
-let tile3 = infect_tile tile2 disease1
 let map1 = Array.make 2 tile_map1
 let map2 = Array.make 2 tile_map1
+let map3 = Array.make_matrix 3 3 tile_map3
+let tile2 = start_tile_infection tile1
+let tile3 = infect_tile tile2 disease1
 let infect_map2 = map2.(0) <- start_tile_infection map2.(0)
 let more_infect_map2 = map2.(0) <- infect_tile map2.(0) disease1
-let map3 = Array.make_matrix 3 1 tile_map3
-let infect_map3 = map3.(0).(0) <- start_tile_infection map3.(0).(0)
-let more_infect_map3 = map3.(0).(0) <- infect_tile map3.(0).(0) disease1
-let spread_map3 = check_neighbors map3 0 0 disease1
-
+let infect_map3 = map3.(1).(1) <- start_tile_infection map3.(1).(1)
+let more_infect_map3 = map3.(1).(1) <- infect_tile map3.(1).(1) disease1
+let spread_map3 = check_neighbors map3 1 1 disease1
 
 let check_infection (name: string) (t: Tile.t) (bool: bool) : test = 
   name >:: (fun _ -> assert_equal bool ((t.infected) > 0))
@@ -63,27 +62,36 @@ let check_infection (name: string) (t: Tile.t) (bool: bool) : test =
 let assert_infection (name: string) (t: Tile.t) (n: int) : test =
   name >:: (fun _ -> assert_bool ":(" (t.infected = n))
 
-let check_civ_infection (name: string) (t: Civilization.t) (bool: bool) : test =
-  name >:: (fun _ -> assert_equal bool (!(t.infected) > 0))
+let check_civ_infection (name: string) (c: Civilization.t) (bool: bool) : test =
+  name >:: (fun _ -> assert_equal bool (!(c.infected) > 0))
 
-let assert_civ_infection (name: string) (t: Civilization.t) (n: int) : test =
-  name >:: (fun _ -> assert_bool ":((" (!(t.infected) = n))
+let assert_civ_infection (name: string) (c: Civilization.t) (n: int) : test =
+  name >:: (fun _ -> assert_bool ":((" (!(c.infected) = n))
 
 let infection_tests = [
   check_infection "uninfected tile" tile1 false;
-  check_infection "infected tile" tile2 true;
-  assert_infection "tile3" tile3 2;
   check_infection "map1.(0) false" map1.(0) false;
   check_infection "map1.(1) false" map1.(1) false;
+  check_infection "infected tile" tile2 true;
+  check_civ_infection "infected tile civ" civ1 true;
+  assert_infection "tile3" tile3 2;
   assert_infection "map2.(0) true" map2.(0) 2;
   check_infection "map2.(1) false" map2.(1) false;
+  assert_civ_infection "civ_map1" civ_map1 2; 
   check_infection "map3.(0).(0) true" map3.(0).(0) true;
   check_infection "map3.(1).(0) true" map3.(1).(0) true;
-  check_infection "map3.(2).(0) false" map3.(2).(0) false;
+  check_infection "map3.(2).(0) true" map3.(2).(0) true;
+  check_infection "map3.(0).(1) true" map3.(0).(1) true;
+  check_infection "map3.(1).(1) true" map3.(1).(1) true;
+  check_infection "map3.(2).(1) true" map3.(2).(1) true;
+  check_infection "map3.(0).(2) true" map3.(0).(2) true;
+  check_infection "map3.(1).(2) true" map3.(1).(2) true;
+  check_infection "map3.(2).(2) true" map3.(2).(2) true;
+  assert_civ_infection "civ_map3" civ_map3 9;
 ]
 
 let test_suite = "test suites"  >::: List.flatten [
-    infection_tests;
+    infection_tests
   ]
 
 let _ = run_test_tt_main test_suite
