@@ -71,6 +71,9 @@ let rec start_game (state: State.t) (start_coordinates : string) =
     | exception End_of_file -> ()
     | input -> start_game state input
 
+(** [setup_disease] lets the user initialize the map with a civilization
+    and choose different values for the disease they want to place into the
+    world. *)
 let rec setup_disease =
   print_string "\x1Bc";
   print_endline "Enter your map size in the form \"height length\": ";
