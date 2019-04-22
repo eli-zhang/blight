@@ -17,6 +17,7 @@ let rec run_game (st: State.t) =
   (* let civilizations = st.civilizations in *)
   print_string "\x1Bc";
   TerminalPrint.print_map st.tiles st.elapsed_time;
+  TerminalPrint.print_living_dead st;
   TerminalPrint.print_infected st;
   TerminalPrint.print_population st;
   flush Pervasives.stdout;
@@ -93,6 +94,10 @@ let rec setup_disease =
   print_string "> ";
   let spread_probability = int_of_string (read_line ()) in
 
+  print_endline "Enter the disease lethality: ";
+  print_string "> ";
+  let lethality = int_of_string (read_line ()) in
+
   print_endline "Enter the starting coordinates in the form \"x y\"";
   print_string "> ";
   let starting_coordinates = read_line () in
@@ -100,14 +105,21 @@ let rec setup_disease =
   let state = 
     let civ1 = 
       Civilization.{infected = ref 0; 
+                    living = ref (100 * (List.hd xy) * (List.nth xy 1));
+                    dead = ref 0;
                     population = 100 * (List.hd xy) * (List.nth xy 1); 
                     neighbors= []} in
     let map = Array.make_matrix (List.hd xy) (List.nth xy 1)
-        Tile.{tile_type = (Civ civ1); infected = 0; population = 100} in
+        Tile.{tile_type = (Civ civ1); 
+              infected = 0; 
+              living = 100;
+              dead = 0;
+              population = 100} in
     let disease = Disease.{inner_tile_spread = inner_tile_spread; 
                            tile_to_tile_spread = tile_to_tile_spread; 
                            civ_to_civ_spread = 0;
-                           spread_probability = spread_probability} in
+                           spread_probability = spread_probability;
+                           lethality = lethality} in
     State.{civilizations = [civ1]; 
            disease = disease; 
            tiles = map; 
