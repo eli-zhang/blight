@@ -7,10 +7,13 @@ let disease1 = Disease.{
     inner_tile_spread=100;
     tile_to_tile_spread=100;
     civ_to_civ_spread=100;
-    spread_probability=100}
+    spread_probability=100;
+    lethality=0}
 
 let civ1 = Civilization.{
     infected=ref 0;
+    living=ref 10;
+    dead=ref 0;
     population=10;
     neighbors=[]
   }
@@ -18,11 +21,15 @@ let civ1 = Civilization.{
 let tile1 = Tile.{
     tile_type=Civ civ1;
     infected=0;
+    living=2;
+    dead=0;
     population=2
   }
 
 let civ_map1 = Civilization.{
     infected=ref 0;
+    living=ref 4;
+    dead=ref 0;
     population=4;
     neighbors=[]
   }
@@ -30,11 +37,15 @@ let civ_map1 = Civilization.{
 let tile_map1 = Tile.{
     tile_type=Civ civ_map1;
     infected=0;
+    living=2;
+    dead=0;
     population=2
   }
 
 let civ_map3 = Civilization.{
     infected=ref 0;
+    living=ref 9;
+    dead=ref 0;
     population=9;
     neighbors=[]
   }
@@ -42,6 +53,8 @@ let civ_map3 = Civilization.{
 let tile_map3 = Tile.{
     tile_type=Civ civ_map3;
     infected=0;
+    living=1;
+    dead=0;
     population=1
   }
 

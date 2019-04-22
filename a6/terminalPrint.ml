@@ -41,6 +41,16 @@ let print_map map time =
           print_string "\027[0m\n"; printMap_helper2 map (count+1) time)
   in (print_string "\027[0;0H"; printMap_helper2  map 0 time)
 
+let print_living_dead (state: State.t) =
+  let living_dead_count = 
+    List.fold_left (fun acc (civ: Civilization.t) -> 
+        (fst acc + !(civ.living), snd acc + !(civ.dead))) 
+      (0,0) state.civilizations in
+  print_endline("\027[31mTotal living: " 
+                ^ string_of_int (fst living_dead_count));
+  print_endline("\027[31mTotal dead: "
+                ^ string_of_int (snd living_dead_count))
+
 (** [print_infected state] prints the total number of infected people in
     the world given by state [state]. *)
 let print_infected (state: State.t) =

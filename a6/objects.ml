@@ -7,6 +7,7 @@ module Disease = struct
     tile_to_tile_spread : int;
     civ_to_civ_spread : int;
     spread_probability : int;
+    lethality : int;
   }
 end 
 
@@ -16,6 +17,8 @@ module Civilization = struct
       people, total population, and neighboring civilizations. *)
   type t = {
     infected : int ref;
+    living: int ref;
+    dead: int ref;
     population : int;
     neighbors : (t ref) list;
   }
@@ -30,6 +33,8 @@ module Tile = struct
   type t = {
     tile_type : tile_types;
     infected : int;
+    living: int;
+    dead: int;
     population : int;
   }
 end
