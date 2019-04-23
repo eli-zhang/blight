@@ -1,5 +1,5 @@
 open TerminalPrint
-open RandomMap 
+(* open RandomMap *)
 open Controller
 open Unix
 open Objects
@@ -148,7 +148,6 @@ let rec setup_disease =
   print_endline "Enter the starting coordinates in the form \"x y\"";
   print_string "> ";
   let starting_coordinates = read_line () in
-  let civcoord = Array.make 10 (0,0) in
 
   let state = 
     let civ1 = 
@@ -157,24 +156,21 @@ let rec setup_disease =
                     dead = ref 0;
                     population = 100 * (List.hd xy) * (List.nth xy 1); 
                     neighbors= []} in
-
-    let map = (*Array.make_matrix (List.hd xy) (List.nth xy 1)
-                Tile.{tile_type = (Civ civ1); 
-                infected = 0; 
-                living = 100;
-                dead = 0;
-                population = 100} *) (Array.make_matrix (List.hd xy) (List.nth xy 1) (Tile.Land)) in
+    let map = Array.make_matrix (List.hd xy) (List.nth xy 1)
+        Tile.{tile_type = (Civ civ1); 
+              infected = 0; 
+              living = 100;
+              dead = 0;
+              population = 100} in
     let disease = Disease.{inner_tile_spread = inner_tile_spread; 
                            tile_to_tile_spread = tile_to_tile_spread; 
                            civ_to_civ_spread = 0;
                            spread_probability = spread_probability;
-                           lethality = lethality} in 
+                           lethality = lethality} in
     State.{civilizations = [civ1]; 
            disease = disease; 
            tiles = map; 
-           elapsed_time = 0;
-           civcoords = civcoord} in
-  RandomMap.generateMap state.tiles state.civcoords 10;
+           elapsed_time = 0} in
   start_game state starting_coordinates
 
 (** [main ()] starts the game and prompts the user for the starting coordinates
