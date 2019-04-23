@@ -14,6 +14,10 @@ let start_tile_infection (tile : Tile.t): Tile.t =
       ((civ.infected := !(civ.infected) + 1);
        {tile with infected = 1})
     else tile
+  | Water percentage -> if percentage = 0 then {tile with tile_type = Water 1}
+    else tile;
+  | Road percentage -> if percentage = 0 then {tile with tile_type = Road 1}
+    else tile;
   | _ -> tile
 
 (** [infect_tile tile disease] spreads the infection in tile [tile] if it 
@@ -46,7 +50,35 @@ let infect_tile (tile : Tile.t) (disease : Disease.t) : Tile.t =
             {tile with infected = new_infected;
                        living = tile.living - died;
                        dead = tile.dead + died})
+  | Water percentage -> if percentage > 0
+    then {tile with tile_type = 
+                      Water (min (percentage + disease.inner_tile_spread) 100)}
+    else tile
+  | Road percentage -> if percentage > 0
+    then {tile with tile_type = 
+                      Road (min (percentage + disease.inner_tile_spread) 100)}
+    else tile
   | _ -> tile
+
+let spread_to_neighbors tiles row column rows cols (disease: Disease.t) =
+  begin
+    if row > 0 && column > 0 && random_check disease.spread_probability then
+      tiles.(row - 1).(column - 1) <- start_tile_infection (tiles.(row - 1).(column - 1));
+    if row > 0 && random_check disease.spread_probability then
+      tiles.(row - 1).(column) <- start_tile_infection (tiles.(row - 1).(column));
+    if row > 0 && column < cols && random_check disease.spread_probability then
+      tiles.(row - 1).(column + 1) <- start_tile_infection (tiles.(row - 1).(column + 1));
+    if (column > 0) && random_check disease.spread_probability then
+      tiles.(row).(column - 1) <- start_tile_infection (tiles.(row).(column - 1));
+    if (column < cols) && random_check disease.spread_probability then
+      tiles.(row).(column + 1) <- start_tile_infection (tiles.(row).(column + 1));
+    if (row < rows) && random_check disease.spread_probability then
+      tiles.(row + 1).(column) <- start_tile_infection (tiles.(row + 1).(column));
+    if row < rows && column < cols && random_check disease.spread_probability then
+      tiles.(row + 1).(column + 1) <- start_tile_infection (tiles.(row + 1).(column + 1));
+    if row < rows && column > 0 && random_check disease.spread_probability then
+      tiles.(row + 1).(column - 1) <- start_tile_infection (tiles.(row + 1).(column - 1));
+  end
 
 (** [check_neighbors tiles row column disease] checks if a tile at a given [row]
     and [column] in the map [tiles] is over the disease [disease]'s infection 
@@ -62,22 +94,11 @@ let check_neighbors (tiles: Tile.t array array) row column (disease: Disease.t) 
   | Civ total_infected -> if tile.infected > 0 then
       if 100 * tile.infected / tile.population >= disease.tile_to_tile_spread then
         if tile.living > 0 then
-          begin
-            if row > 0 && column > 0 && random_check disease.spread_probability then
-              tiles.(row - 1).(column - 1) <- start_tile_infection (tiles.(row - 1).(column - 1));
-            if row > 0 && random_check disease.spread_probability then
-              tiles.(row - 1).(column) <- start_tile_infection (tiles.(row - 1).(column));
-            if row > 0 && column < cols && random_check disease.spread_probability then
-              tiles.(row - 1).(column + 1) <- start_tile_infection (tiles.(row - 1).(column + 1));
-            if (column > 0) && random_check disease.spread_probability then
-              tiles.(row).(column - 1) <- start_tile_infection (tiles.(row).(column - 1));
-            if (column < cols) && random_check disease.spread_probability then
-              tiles.(row).(column + 1) <- start_tile_infection (tiles.(row).(column + 1));
-            if (row < rows) && random_check disease.spread_probability then
-              tiles.(row + 1).(column) <- start_tile_infection (tiles.(row + 1).(column));
-            if row < rows && column < cols && random_check disease.spread_probability then
-              tiles.(row + 1).(column + 1) <- start_tile_infection (tiles.(row + 1).(column + 1));
-            if row < rows && column > 0 && random_check disease.spread_probability then
-              tiles.(row + 1).(column - 1) <- start_tile_infection (tiles.(row + 1).(column - 1));
-          end	
+          spread_to_neighbors tiles row column rows cols disease
+  | Water percentage -> if percentage > 0 then
+      if percentage >= disease.water_spread then
+        spread_to_neighbors tiles row column rows cols disease
+  | Road percentage -> if percentage > 0 then
+      if percentage >= disease.road_spread then
+        spread_to_neighbors tiles row column rows cols disease
   | _ -> ()

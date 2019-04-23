@@ -182,7 +182,9 @@ let rec setup_disease =
               dead = 0;
               population = 100} in
     let disease = Disease.{inner_tile_spread = inner_tile_spread; 
-                           tile_to_tile_spread = tile_to_tile_spread; 
+                           tile_to_tile_spread = tile_to_tile_spread;
+                           water_spread = 50;
+                           road_spread = 30;
                            civ_to_civ_spread = 0;
                            spread_probability = spread_probability;
                            lethality = lethality} in

@@ -5,6 +5,8 @@ module Disease = struct
   type t = {
     inner_tile_spread : int;
     tile_to_tile_spread : int;
+    water_spread: int;
+    road_spread: int;
     civ_to_civ_spread : int;
     spread_probability : int;
     lethality : int;
@@ -27,7 +29,7 @@ end
 (** Represents a tile in the world/map. *)
 module Tile = struct
   (** The type of the tile *)
-  type tile_types = Civ of Civilization.t | Land | Water | Road
+  type tile_types = Civ of Civilization.t | Land | Water of int | Road of int
   (** Tracks information about the tile, like its type, number of people
       infected in the tile, and the total number of people in the tile.*)
   type t = {
