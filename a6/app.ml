@@ -14,15 +14,23 @@ let string_to_list str =
     spreads disease within and between tiles, and prints out the map. *)
 let rec run_game (st: State.t) =
   (* let civilizations = st.civilizations in *)
-  print_string "\x1Bc";
   Unix.set_nonblock Unix.stdin;
   begin
     match input_char Pervasives.stdin with
     | char -> 
       Unix.clear_nonblock Unix.stdin;
+      print_string "\027[0m";
+      let terminalio = Unix.tcgetattr Unix.stdin in
+      Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with 
+                                                 Unix.c_icanon = true; 
+                                                 Unix.c_echo = true};
       let command = read_line () in
-      print_string command
+      print_string command;
+      Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with 
+                                                 Unix.c_icanon = false; 
+                                                 Unix.c_echo = false};
     | exception _ -> 
+      print_string "\x1Bc";
       Unix.clear_nonblock Unix.stdin;
       TerminalPrint.print_map st.tiles st.elapsed_time;
       TerminalPrint.print_living_dead st;
@@ -47,7 +55,9 @@ let rec run_game (st: State.t) =
     a given location [start_coordinates] inputted by the user.*)
 let rec start_game (state: State.t) (start_coordinates : string) =
   let terminalio = Unix.tcgetattr Unix.stdin in
-  Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with Unix.c_icanon = false};
+  Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
+                                            Unix.c_icanon = false; 
+                                            Unix.c_echo = false};
   let string_list = string_to_list start_coordinates in
   try let xy = List.map int_of_string string_list in
     if List.length xy <> 2 
