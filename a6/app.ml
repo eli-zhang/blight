@@ -1,7 +1,6 @@
 open TerminalPrint
 (* open RandomMap *)
 open Controller
-open Unix
 open Objects
 open Infection
 open State
@@ -16,22 +15,30 @@ let string_to_list str =
 let rec run_game (st: State.t) =
   (* let civilizations = st.civilizations in *)
   print_string "\x1Bc";
-  TerminalPrint.print_map st.tiles st.elapsed_time;
-  TerminalPrint.print_living_dead st;
-  TerminalPrint.print_infected st;
-  TerminalPrint.print_population st;
-  flush Pervasives.stdout;
-  let disease = st.disease in
-  let tiles = st.tiles in
+  Unix.set_nonblock Unix.stdin;
+  begin
+    match input_char Pervasives.stdin with
+    | char -> 
+      Unix.clear_nonblock Unix.stdin;
+      let command = read_line () in
+      print_string command
+    | exception _ -> 
+      Unix.clear_nonblock Unix.stdin;
+      TerminalPrint.print_map st.tiles st.elapsed_time;
+      TerminalPrint.print_living_dead st;
+      TerminalPrint.print_infected st;
+      TerminalPrint.print_population st;
+      flush Pervasives.stdout;
+      let disease = st.disease in
+      let tiles = st.tiles in
 
-  (for x = 0 to Array.length tiles - 1 do
-     for y = 0 to Array.length tiles.(x) - 1 do
-       check_neighbors tiles x y disease;
-       tiles.(x).(y) <- infect_tile (tiles.(x).(y))(disease);
-     done
-   done);
-  (* let updated_civilizations = 
-     infect_civilizations [] civilizations disease in *)
+      (for x = 0 to Array.length tiles - 1 do
+         for y = 0 to Array.length tiles.(x) - 1 do
+           check_neighbors tiles x y disease;
+           tiles.(x).(y) <- infect_tile (tiles.(x).(y))(disease);
+         done
+       done);
+  end;
   Unix.sleepf 0.1;
   run_game {st with elapsed_time = st.elapsed_time + 1}
 
@@ -39,6 +46,8 @@ let rec run_game (st: State.t) =
     [state] (with the map, disease, and civilizations) and starts the disease at 
     a given location [start_coordinates] inputted by the user.*)
 let rec start_game (state: State.t) (start_coordinates : string) =
+  let terminalio = Unix.tcgetattr Unix.stdin in
+  Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with Unix.c_icanon = false};
   let string_list = string_to_list start_coordinates in
   try let xy = List.map int_of_string string_list in
     if List.length xy <> 2 
