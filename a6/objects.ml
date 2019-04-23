@@ -30,13 +30,7 @@ module Tile = struct
   type tile_types = Civ of Civilization.t | Land | Water | Road
   (** Tracks information about the tile, like its type, number of people
       infected in the tile, and the total number of people in the tile.*)
-  type t = {
-    tile_type : tile_types;
-    infected : int;
-    living: int;
-    dead: int;
-    population : int;
-  }
+
 end
 
 (* let rec infect_civilizations 

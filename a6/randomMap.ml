@@ -1,5 +1,4 @@
-#use "objects.ml"
-
+open Objects
 
 let map = Array.make_matrix 40 50 Tile.Land
 
@@ -38,7 +37,7 @@ let rec placeCivilizations map civs =
   | [] -> ();
   | h::t -> 
     let rec placeCiv ((x,y),size) =
-      map.(x).(y) <- Tile.Civ{infected = ref 0; population = 50; neighbors = [] };
+      map.(x).(y) <- Tile.Civ{infected = ref 0; living = ref 50; dead = ref 0;population = 50; neighbors = [] };
       if (size > 0) then
         let coord = closestNonCiv map (x,y) in placeCiv (coord, size-1)
       else  ();
@@ -61,16 +60,16 @@ let rec getBridges map civs staticciv=
       | (c,s)::t ->
         (let rec makeBridge (x1,y1) (x2,y2) =
            if(x1<x2 && x1<length-1 ) then  
-             (if (map.(x1+1).(y1)= Tile.Civ{infected = ref 0;population = 50;neighbors = []}) then makeBridge ((x1+1),y1) (x2,y2)
+             (if (map.(x1+1).(y1)= Tile.Civ{infected = ref 0;living = ref 50; dead = ref 0;population = 50;neighbors = []}) then makeBridge ((x1+1),y1) (x2,y2)
               else map.(x1+1).(y1) <- Tile.Road; makeBridge (x1+1,y1) (x2,y2) )
            else if (x1>x2 && x1>0) then 
-             (if (map.(x1-1).(y1) = Tile.Civ{infected = ref 0;population = 50;neighbors = []}) then makeBridge ((x1-1),y1) (x2,y2)
+             (if (map.(x1-1).(y1) = Tile.Civ{infected = ref 0;living = ref 50; dead = ref 0;population = 50;neighbors = []}) then makeBridge ((x1-1),y1) (x2,y2)
               else map.(x1-1).(y1) <- Tile.Road; makeBridge (x1-1,y1) (x2,y2))
            else if (y1<y2 && y1<width-1) then 
-             (if (map.(x1).(y1+1) = Tile.Civ{infected = ref 0;population = 50;neighbors = []}) then makeBridge (x1,(y1+1)) (x2,y2)
+             (if (map.(x1).(y1+1) = Tile.Civ{infected = ref 0;living = ref 50; dead = ref 0;population = 50;neighbors = []}) then makeBridge (x1,(y1+1)) (x2,y2)
               else map.(x1).(y1+1) <- Tile.Road; makeBridge (x1,(y1+1)) (x2,y2))
            else if (y1>y2 && y1>0) then 
-             (if (map.(x1).(y1-1) = Tile.Civ{infected = ref 0;population = 50;neighbors = []}) then makeBridge (x1,(y1-1)) (x2,y2)
+             (if (map.(x1).(y1-1) = Tile.Civ{infected = ref 0;living = ref 50; dead = ref 0;population = 50;neighbors = []}) then makeBridge (x1,(y1-1)) (x2,y2)
               else map.(x1).(y1-1) <- Tile.Road; makeBridge (x1,(y1-1)) (x2,y2))
            else () in
          makeBridge c coords; connectCivs (coords,size) t) in 
