@@ -55,6 +55,7 @@ let rec run_game (st: State.t) =
     [state] (with the map, disease, and civilizations) and starts the disease at 
     a given location [start_coordinates] inputted by the user.*)
 let rec start_game (state: State.t) (start_coordinates : string) =
+  Random.self_init ();
   let terminalio = Unix.tcgetattr Unix.stdin in
   Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
                                             Unix.c_icanon = false; 
