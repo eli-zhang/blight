@@ -27,6 +27,7 @@ let rec run_game (st: State.t) =
                                                  Unix.c_echo = true};
       let command = read_line () in
       print_string command;
+      flush Pervasives.stdout;
       Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with 
                                                  Unix.c_icanon = false; 
                                                  Unix.c_echo = false};
@@ -218,7 +219,7 @@ let rec setup_disease =
      let starting_coordinates = read_line () in
 
      let map = Array.make_matrix (List.hd xy) (List.nth xy 1) 
-         (Tile.{tile_type = Road 0;
+         (Tile.{tile_type = Land;
                 infected = 0;
                 living =0;
                 dead = 0;
