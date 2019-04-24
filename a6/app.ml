@@ -14,17 +14,18 @@ let rec read_command (st: State.t) =
   let command = read_line () in
   begin
     match parse command with
-    |  exception Empty -> print_endline "You need to input something! Press [Enter] to continue.";
+    |  exception Empty -> print_endline "You need to input something! Press any key to continue.";
       (match input_char Pervasives.stdin with
        | _ -> st)
-    | exception Malformed -> print_endline "That's not a valid command! Press [Enter] to continue."; 
+    | exception Malformed -> print_endline "That's not a valid command! Press any key to continue."; 
       (match input_char Pervasives.stdin with
        | _ -> st)
     | Disease -> let st' = {st with disease=print_disease_menu st.disease} in
       print_endline "Enter another command; type \"continue\" to continue.";
       read_command st';
     | Continue -> st;
-    | Quit -> exit 0;
+    | Quit -> print_string "Thanks for playing!";
+      exit 0;
   end
 
 (** [run_game st] is the main game loop that steps the game state [st],
@@ -55,7 +56,7 @@ let rec run_game (st: State.t) =
       TerminalPrint.print_infected st;
       TerminalPrint.print_population st;
       TerminalPrint.print_world_info st;
-      print_endline "If you would like to input a command, press [Enter] once.\nWait for a moment and do not input anything else!";
+      print_endline "Press any key to pause the game or enter a command.";
       flush Pervasives.stdout;
 
       if (total_dead st) = (total_population st) then
@@ -213,7 +214,7 @@ let setup_disease state coords =
   print_string "\x1B[7;10H\x1B[38;2;255;255;255m> ";
   let disease_name = read_line () in
   print_string "\x1B[9;10H\x1B[38;2;255;255;255mWhile the game is running, press any key to pause or enter commands.";
-  print_string "\x1B[10;10H\x1B[38;2;255;255;255mPress any key to start!";
+  print_string "\x1B[10;10H\x1B[38;2;255;255;255mPress [Enter] to start!";
   read_line ();
   start_game state coords
 
