@@ -68,10 +68,6 @@ let rec run_game (st: State.t) =
     a given location [start_coordinates] inputted by the user.*)
 let rec start_game (state: State.t) (start_coordinates : string) =
   Random.self_init ();
-  let terminalio = Unix.tcgetattr Unix.stdin in
-  Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
-                                            Unix.c_icanon = false; 
-                                            Unix.c_echo = false};
   let string_list = string_to_list start_coordinates in
   try let xy = List.map int_of_string string_list in
     if List.length xy <> 2 
