@@ -10,8 +10,8 @@ let print_map map time =
       (* Prints the map in colored tiles *)
       match tile.tile_type with
       | Land -> print_string "\027[40m  "; 
-      | Water -> print_string "\027[46m  "; 
-      | Road -> print_string "\027[0m  ";
+      | Water _ -> print_string "\027[46m  "; 
+      | Road _ -> print_string "\027[0m  ";
       | Civ civ -> 
         let infected = tile.infected in 
         let population = tile.population in
@@ -26,8 +26,8 @@ let print_map map time =
       (* Prints information about each tile in the map *)
       match tile.tile_type with
       | Land -> print_string "\027[40m L"; 
-      | Water -> print_string "\027[46m W"; 
-      | Road -> print_string "\027[0m R";
+      | Water _ -> print_string "\027[46m W"; 
+      | Road _ -> print_string "\027[0m R";
       | Civ civ -> 
         let infected = tile.infected in 
         let population = tile.population in
