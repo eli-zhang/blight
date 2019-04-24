@@ -149,11 +149,10 @@ let rec coordinate_check prob =
     match read_line () with
     | input -> coordinate_check input
 
-
 (** [setup_disease] lets the user initialize the map with a civilization
     and choose different values for the disease they want to place into the
     world. *)
-let rec setup_disease =
+let setup_game =
   ANSITerminal.resize 200 45;
   print_string "\x1Bc";
   print_string 
@@ -195,14 +194,10 @@ let rec setup_disease =
 
                                                           Ebola                            Rabies                         Cooties                         Custom
                                                            (a)                               (b)                            (c)                             (d)
-  ";
-
-
-  (* print_endline "Would you like to use default or custom parameters?";
-     print_string "> "; *)
-  let command = read_line () in
-  if command = "default" then
-    let state = 
+  \n";
+  let selection = read_line () in
+  if selection <> "default" then
+    let temp_state = 
       let civ1 = 
         Civilization.{infected = ref 0; 
                       living = ref 40000;
@@ -215,20 +210,21 @@ let rec setup_disease =
                 living = 100;
                 dead = 0;
                 population = 100} in
-      let disease = Disease.{inner_tile_spread = 20; 
-                             tile_to_tile_spread = 80;
-                             water_spread = 50;
-                             road_spread = 30;
-                             civ_to_civ_spread = 0;
-                             spread_probability = 10;
-                             lethality = 10} in
+      let disease = Objects.cooties_default in
       let civcoord = Array.make 5 (0,0) in
       State.{civilizations = [civ1]; 
              disease = disease; 
              tiles = map; 
              elapsed_time = 0;
              civcoords = civcoord} in
-    start_game state "10 10"
+    if selection = "a" || selection = "ebola" then
+      let state = {temp_state with disease = Objects.ebola_default} in
+      start_game state "10 10"
+    else if selection = "b" || selection = "rabies" then
+      let state = {temp_state with disease = Objects.rabies_default} in
+      start_game state "10 10"
+    else if selection = "c" || selection = "cooties" then
+      start_game temp_state "10 10" else failwith "Invalid disease"
 
   else
     (print_string "\x1Bc";
@@ -280,7 +276,6 @@ let rec setup_disease =
                               tile_to_tile_spread = tile_to_tile_spread;
                               water_spread = 50;
                               road_spread = 30;
-                              civ_to_civ_spread = 0;
                               spread_probability = spread_probability;
                               lethality = lethality} in
        State.{civilizations = [civ1]; 
@@ -294,6 +289,6 @@ let rec setup_disease =
 (** [main ()] starts the game and prompts the user for the starting coordinates
     of the disease. *)
 let main () = 
-  setup_disease
+  setup_game
 
 let () = main ()

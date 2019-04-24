@@ -22,9 +22,8 @@ let disease_parse (str : string) (disease : Disease.t) =
     if h = "exit" then disease else
     if h = "1" then {disease with inner_tile_spread = lst_to_int t} else
     if h = "2" then {disease with tile_to_tile_spread = lst_to_int t} else
-    if h = "3" then {disease with civ_to_civ_spread = lst_to_int t} else
-    if h = "4" then {disease with spread_probability = lst_to_int t} else
-    if h = "5" then {disease with lethality = lst_to_int t} else
+    if h = "3" then {disease with spread_probability = lst_to_int t} else
+    if h = "4" then {disease with lethality = lst_to_int t} else
       raise Disease_Malformed
 
 let parse (str : string) =
@@ -42,11 +41,9 @@ let print_disease_menu (disease : Disease.t) =
   print_endline (string_of_int disease.inner_tile_spread);
   print_string "2. Tile to tile spread: ";
   print_endline (string_of_int disease.tile_to_tile_spread);
-  print_string "3. Civilization to civilization spread: ";
-  print_endline (string_of_int disease.civ_to_civ_spread);
-  print_string "4. Spread probability: ";
+  print_string "3. Spread probability: ";
   print_endline (string_of_int disease.spread_probability);
-  print_string "5. Lethality: ";
+  print_string "4. Lethality: ";
   print_endline (string_of_int disease.lethality);
   print_endline "If you would like to change anything, 
   type the stat number followed by the new value 

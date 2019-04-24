@@ -6,7 +6,6 @@ open Controller
 let disease1 = Disease.{
     inner_tile_spread=100;
     tile_to_tile_spread=100;
-    civ_to_civ_spread=100;
     spread_probability=100;
     lethality=0}
 
