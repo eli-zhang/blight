@@ -16,11 +16,11 @@ let rec run_game (st: State.t) =
   (* let civilizations = st.civilizations in *)
   let user_input command = 
     match Controller.parse command with
-    | exception Empty -> print_endline "You need to input something!";
+    | exception Empty -> print_endline "You need to input something! Press [Enter] to continue.";
       (match input_char Pervasives.stdin with
        | char -> run_game {st with elapsed_time = st.elapsed_time + 1}
        | exception _ -> ())
-    | exception Malformed -> print_endline "Sorry, something went wrong with your input.";
+    | exception Malformed -> print_endline "Sorry, something went wrong with your input. Press [Enter] to continue.";
       (match input_char Pervasives.stdin with
        | char -> run_game {st with elapsed_time = st.elapsed_time + 1}
        | exception _ -> ())
@@ -28,19 +28,26 @@ let rec run_game (st: State.t) =
     | Disease -> Controller.print_disease_menu st.disease; 
       (let disease_command = read_line () in 
        match Controller.disease_parse disease_command st.disease with 
-       | exception Disease_Malformed -> print_endline "Sorry, your input was not formatted correctly.";
+       | exception Disease_Malformed -> print_endline "Sorry, your input was not formatted correctly. Press [Enter] to continue.";
          (match input_char Pervasives.stdin with
           | char -> run_game {st with elapsed_time = st.elapsed_time + 1}
           | exception _ -> ())
        | disease -> run_game {st with disease = disease}) in
-  print_string "\x1Bc";
+  print_endline "Type [disease] to view the current disease stats and change them if needed. Type [quit] to quit the game.";
   Unix.set_nonblock Unix.stdin;
   begin
     match input_char Pervasives.stdin with
     | char -> 
       Unix.clear_nonblock Unix.stdin;
-      print_endline "Help:\nType [disease] to view the current disease stats and change them if needed. Type [quit] to quit the game."; 
-      let command = read_line () in user_input command
+      let terminalio = Unix.tcgetattr Unix.stdin in
+      Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
+                                                Unix.c_icanon = true; 
+                                                Unix.c_echo = true}; 
+      let command = read_line () in user_input command;
+      let terminalio = Unix.tcgetattr Unix.stdin in
+      Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
+                                                Unix.c_icanon = false; 
+                                                Unix.c_echo = false}
     | exception _ -> 
       print_string "\x1Bc";
       Unix.clear_nonblock Unix.stdin;
@@ -48,7 +55,7 @@ let rec run_game (st: State.t) =
       TerminalPrint.print_living_dead st;
       TerminalPrint.print_infected st;
       TerminalPrint.print_population st;
-      print_endline "If you would like to input a command, press [Enter] and wait.\nDo not input anything else!";
+      print_endline "If you would like to input a command, press [Enter] once.\nWait for a moment and do not input anything else!";
       flush Pervasives.stdout;
       let disease = st.disease in
       let tiles = st.tiles in
@@ -68,6 +75,10 @@ let rec run_game (st: State.t) =
     a given location [start_coordinates] inputted by the user.*)
 let rec start_game (state: State.t) (start_coordinates : string) =
   Random.self_init ();
+  let terminalio = Unix.tcgetattr Unix.stdin in
+  Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
+                                            Unix.c_icanon = false; 
+                                            Unix.c_echo = false};
   let string_list = string_to_list start_coordinates in
   try let xy = List.map int_of_string string_list in
     if List.length xy <> 2 

@@ -31,7 +31,7 @@ let parse (str : string) =
   let filtered_list = List.filter (fun ele -> ele <> "") command_list in
   match filtered_list with
   | [] -> raise Empty
-  | h::t ->      
+  | h::t ->
     if h = "quit" then Quit else 
     if h = "disease" then Disease else raise Malformed
 
