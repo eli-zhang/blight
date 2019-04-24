@@ -7,7 +7,6 @@ module Disease = struct
     tile_to_tile_spread : int;
     water_spread: int;
     road_spread: int;
-    civ_to_civ_spread : int;
     spread_probability : int;
     lethality : int;
   }
@@ -41,19 +40,23 @@ module Tile = struct
   }
 end
 
-(* let rec infect_civilizations 
-    (civilizations: Civilization.t list) (disease: Disease.t) =
-   match civilizations with
-   | [] -> ()
-   | (civ::t) -> 
-    let infected = civ.infected in
-    let population = civ.population in
-    if (!infected / population * 100) > disease.civ_to_civ_spread 
-    then let rec infect_neighbors neighbors =
-           match neighbors with
-           | [] -> ();
-           | civ::t -> if !(civ.infected) = 0 
-             then civ.infected := 1;
-             infect_neighbors t in
-      infect_neighbors civ.neighbors;
-      infect_civilizations t disease *)
+let ebola_default = Disease.{inner_tile_spread = 5; 
+                             tile_to_tile_spread = 60;
+                             water_spread = 80;
+                             road_spread = 20;
+                             spread_probability = 50;
+                             lethality = 60}
+
+let rabies_default = Disease.{inner_tile_spread = 10; 
+                              tile_to_tile_spread = 30;
+                              water_spread = 0;
+                              road_spread = 10;
+                              spread_probability = 100;
+                              lethality = 80}
+
+let cooties_default = Disease.{inner_tile_spread = 40; 
+                               tile_to_tile_spread = 100;
+                               water_spread = 0;
+                               road_spread = 100;
+                               spread_probability = 10;
+                               lethality = 0}
