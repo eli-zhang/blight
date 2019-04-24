@@ -4,12 +4,16 @@ open State
 (** [print_map map time] prints the map [map] followed by the time [time]
     elapsed so far in the world. *)
 let print_map map time = 
-  let rec printMap_helper (tile: Tile.t) =
+  let rec printMap_helper counter (tile: Tile.t) =
     let colors = true in
     if colors then 
       (* Prints the map in colored tiles *)
       match tile.tile_type with
-      | Land -> print_string "\x1B[48;2;30;63;0m  "; 
+      | Land -> 
+        counter := !(counter) + 1;
+        if !(counter) mod 3 = 0 then print_string "\x1B[48;2;0;100;0m  "
+        else if !(counter) mod 3 = 1 then print_string "\x1B[48;2;34;139;34m  "
+        else print_string "\x1B[48;2;0;128;0m  ";
       | Water percentage -> 
         if percentage > 0 then
           if percentage = 100 then (print_string "\x1B[48;2;153;255;51m  ") else
@@ -45,9 +49,10 @@ let print_map map time =
                       ^ " P: " ^ string_of_int population ^ " "); in
 
   let rec printMap_helper2 map count time =
+    let tile_color_counter = ref 0 in
     if count = (Array.length map) then 
       (print_endline ("\027[31mElapsed Time: " ^ (string_of_int time)))
-    else (Array.iter printMap_helper (Array.get map count); 
+    else (Array.iter (printMap_helper tile_color_counter) (Array.get map count); 
           print_string "\027[0m\n"; printMap_helper2 map (count+1) time)
   in (print_string "\027[0;0H"; printMap_helper2  map 0 time)
 
@@ -84,3 +89,24 @@ let total_population (state: State.t) =
 let print_population (state: State.t) =
   print_endline("\027[31mTotal population: "
                 ^ string_of_int (total_population state))
+
+let print_world_info (state: State.t) =
+  let change_tup (a, b, c, d) a' b' c' d' = (a' + a, b' + b, c' + c, d' + d) in
+  let stats =
+    List.fold_left (fun acc (civ: Civilization.t) -> 
+        change_tup acc !(civ.living) !(civ.dead) !(civ.infected) civ.population)
+      (0, 0, 0, 0) state.civilizations in
+  match stats with
+  | (living, dead, infected, population) ->
+    let living_percent = (100 * living / population) in
+    let dead_percent = 100 * dead / population in
+    let infected_percent =  100 * infected / population in
+    let rec print_bar_helper percent color =
+      let threshold = 5 in
+      if percent >= threshold 
+      then (print_string (color ^ "  ");
+            print_bar_helper (percent - 5) color); in
+    print_bar_helper (dead_percent - living_percent) "\x1B[48;2;10;10;10m";
+    print_bar_helper infected_percent "\x1B[48;2;178;34;34m";
+    print_bar_helper (living_percent - infected_percent) "\x1B[48;2;143;188;143m";
+    print_endline "\027[0m\n"

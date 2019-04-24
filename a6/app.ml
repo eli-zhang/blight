@@ -49,6 +49,7 @@ let rec run_game (st: State.t) =
       TerminalPrint.print_living_dead st;
       TerminalPrint.print_infected st;
       TerminalPrint.print_population st;
+      TerminalPrint.print_world_info st;
       flush Pervasives.stdout;
 
       if (total_dead st) = (total_population st) then
@@ -291,6 +292,7 @@ let setup_game =
               civcoords = civcoord} in
      generateMap state.tiles state.civcoords 10;
      start_game state starting_coordinates)
+
 
 (** [main ()] starts the game and prompts the user for the starting coordinates
     of the disease. *)
