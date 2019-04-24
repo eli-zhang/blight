@@ -4,6 +4,7 @@ open Controller
 open Objects
 open Infection
 open State
+open RandomMap
 
 (** [string_to_list str] splits a string [str] at every space into a list. *)
 let string_to_list str =
@@ -168,6 +169,13 @@ let rec setup_disease =
   print_string "> ";
   let starting_coordinates = read_line () in
 
+  let map = Array.make_matrix (List.hd xy) (List.nth xy 1) 
+      (Tile.{tile_type = Road 0;
+             infected = 0;
+             living =0;
+             dead = 0;
+             population= 0}) in
+  let civcoord = Array.make 5 (0,0) in
   let state = 
     let civ1 = 
       Civilization.{infected = ref 0; 
@@ -175,12 +183,7 @@ let rec setup_disease =
                     dead = ref 0;
                     population = 100 * (List.hd xy) * (List.nth xy 1); 
                     neighbors= []} in
-    let map = Array.make_matrix (List.hd xy) (List.nth xy 1)
-        Tile.{tile_type = (Civ civ1); 
-              infected = 0; 
-              living = 100;
-              dead = 0;
-              population = 100} in
+
     let disease = Disease.{inner_tile_spread = inner_tile_spread; 
                            tile_to_tile_spread = tile_to_tile_spread;
                            water_spread = 50;
@@ -191,7 +194,9 @@ let rec setup_disease =
     State.{civilizations = [civ1]; 
            disease = disease; 
            tiles = map; 
-           elapsed_time = 0} in
+           elapsed_time = 0;
+           civcoords = civcoord} in
+  generateMap state.tiles state.civcoords 10;
   start_game state starting_coordinates
 
 (** [main ()] starts the game and prompts the user for the starting coordinates

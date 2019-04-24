@@ -1,4 +1,4 @@
-#use "objects.ml"
+
 open Objects
 
 
@@ -71,22 +71,22 @@ let rec getBridges (map: Tile.t array array) civs staticciv=
 
              match (map.(x1+1).(y1)).tile_type with
              | Civ _ -> makeBridge ((x1+1),y1) (x2,y2)
-             | _ -> map.(x1+1).(y1) <- Tile.{tile_type = Road; infected = 0; living =0; dead=0; population =0}; makeBridge (x1+1,y1) (x2,y2)
+             | _ -> map.(x1+1).(y1) <- Tile.{tile_type = Road 0; infected = 0; living =0; dead=0; population =0}; makeBridge (x1+1,y1) (x2,y2)
 
            else if (x1>x2 && x1>0) then 
              match (map.(x1-1).(y1)).tile_type with
              | Civ _ -> makeBridge ((x1-1),y1) (x2,y2)
-             | _ -> map.(x1-1).(y1) <- Tile.{tile_type = Road; infected = 0; living =0; dead=0; population =0}; makeBridge (x1-1,y1) (x2,y2)
+             | _ -> map.(x1-1).(y1) <- Tile.{tile_type = Road 0; infected = 0; living =0; dead=0; population =0}; makeBridge (x1-1,y1) (x2,y2)
 
            else if (y1<y2 && y1<width-1) then 
              match (map.(x1).(y1+1)).tile_type with
              | Civ _ -> makeBridge ((x1),y1+1) (x2,y2)
-             | _ -> map.(x1).(y1+1) <- Tile.{tile_type = Road; infected = 0; living =0; dead=0; population =0}; makeBridge (x1,y1+1) (x2,y2)
+             | _ -> map.(x1).(y1+1) <- Tile.{tile_type = Road 0; infected = 0; living =0; dead=0; population =0}; makeBridge (x1,y1+1) (x2,y2)
 
            else if (y1>y2 && y1>0) then 
              match (map.(x1).(y1-1)).tile_type with
              | Civ _ -> makeBridge ((x1),y1-1) (x2,y2)
-             | _ -> map.(x1).(y1-1) <- Tile.{tile_type = Road; infected = 0; living =0; dead=0; population =0}; makeBridge (x1,y1-1) (x2,y2)
+             | _ -> map.(x1).(y1-1) <- Tile.{tile_type = Road 0; infected = 0; living =0; dead=0; population =0}; makeBridge (x1,y1-1) (x2,y2)
 
            else () in
          makeBridge c coords; connectCivs (coords,size) t) in 
@@ -98,14 +98,14 @@ let rec placeRivers (map: Tile.t array array) n =
   let length = (Array.length map) in
   let width = (Array.length (Array.get map 0)) in
   let rec placeRiverUp (map: Tile.t array array) (x,y) =
-    map.(x).(y) <-Tile.{tile_type= Water; infected= 0; living=0;dead=0;population=0};
-    map.(x+1).(y) <- Tile.{tile_type= Water; infected= 0; living=0;dead=0;population=0};
+    map.(x).(y) <-Tile.{tile_type= Water 0; infected= 0; living=0;dead=0;population=0};
+    map.(x+1).(y) <- Tile.{tile_type= Water 0; infected= 0; living=0;dead=0;population=0};
     if(x>(-2) && y>(-2) && x<(length-2) && y<(width-1))  
     then placeRiverUp map (x+1,y+1) else () in
 
   let rec placeRiverDown (map: Tile.t array array) (x,y)=
-    map.(x).(y) <- Tile.{tile_type= Water; infected= 0; living=0;dead=0;population=0};
-    map.(x).(y-1)<-Tile.{tile_type= Water; infected= 0; living=0;dead=0;population=0};
+    map.(x).(y) <- Tile.{tile_type= Water 0; infected= 0; living=0;dead=0;population=0};
+    map.(x).(y-1)<-Tile.{tile_type= Water 0; infected= 0; living=0;dead=0;population=0};
     if(x>(0) && y>(1) && x<(length) &&y<(width)) 
     then placeRiverDown map (x-1,y-1) else () in
   if n>0 then  
@@ -137,8 +137,8 @@ let printMap (map: Tile.t array array) =
   let rec printMap_helper (tile:Tile.t) = 
     match tile.tile_type with
     | Land -> print_string "\027[40m  "; 
-    | Water -> print_string "\027[46m  "; 
-    | Road -> print_string "\027[0m  ";
+    | Water _ -> print_string "\027[46m  "; 
+    | Road _ -> print_string "\027[0m  ";
     | Civ _ -> print_string "\027[47m  "; in
 
   let rec printMap_helper2 (map: Tile.t array array) count =

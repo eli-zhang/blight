@@ -6,5 +6,6 @@ module State = struct
     disease: Disease.t;
     tiles: Tile.t array array;
     elapsed_time: int;
+    civcoords: (int*int) array
   }
 end
