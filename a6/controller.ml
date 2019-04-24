@@ -36,7 +36,7 @@ let parse (str : string) =
     if h = "continue" then Continue else
     if h = "disease" then Disease else raise Malformed
 
-let print_disease_menu (disease : Disease.t) =
+let print_disease_menu_numbers (disease : Disease.t) =
   print_string "Current disease stats:\n1. Inner tile spread: ";
   print_endline (string_of_int disease.inner_tile_spread);
   print_string "2. Tile to tile spread: ";
@@ -48,6 +48,34 @@ let print_disease_menu (disease : Disease.t) =
   print_endline "If you would like to change anything, 
   type the stat number followed by the new value 
   ([1 40] changes the inner tile spread to 40.";
+  try disease_parse (read_line ()) disease
+  with Disease_Malformed -> disease
+
+let print_disease_menu (disease : Disease.t) =
+  let rec print_bar_helper percent color =
+    let threshold = 5 in
+    if percent >= threshold 
+    then (print_string (color ^ "  ");
+          print_bar_helper (percent - 5) color); in
+  print_endline "1. Infectivity:";
+  print_bar_helper disease.inner_tile_spread "\x1B[48;2;0;58;0m";
+  print_bar_helper (100 - disease.inner_tile_spread) "\x1B[48;2;255;255;255m";
+  print_endline "\027[0m\n";
+  print_endline "2. Transmission Rate:";
+  print_bar_helper disease.spread_probability "\x1B[48;2;0;58;0m";
+  print_bar_helper (100 - disease.spread_probability) "\x1B[48;2;255;255;255m";
+  print_endline "\027[0m\n";
+  print_endline "3. Incidence:";
+  print_bar_helper disease.tile_to_tile_spread "\x1B[48;2;0;58;0m";
+  print_bar_helper (100 - disease.tile_to_tile_spread) "\x1B[48;2;255;255;255m";
+  print_endline "\027[0m\n";
+  print_endline "4. Virulence:";
+  print_bar_helper disease.lethality "\x1B[48;2;200;0;0m";
+  print_bar_helper (100 - disease.lethality) "\x1B[48;2;255;255;255m";
+  print_endline "\027[0m\n";
+  print_endline "If you would like to change anything, 
+  type the stat number followed by the new value 
+  ([1 40] changes the Infectivity to 40.)";
   try disease_parse (read_line ()) disease
   with Disease_Malformed -> disease
 
