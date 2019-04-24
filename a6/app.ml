@@ -26,7 +26,14 @@ let rec run_game (st: State.t) =
                                                  Unix.c_icanon = true; 
                                                  Unix.c_echo = true};
       let command = read_line () in
-      print_string command;
+      begin
+        match parse command with
+        | exception Empty -> ();
+        | exception Malformed -> print_endline "That's not a valid command!";
+        | Disease -> print_disease_menu st.disease;
+        | Quit -> exit 0;
+      end;
+
       Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with 
                                                  Unix.c_icanon = false; 
                                                  Unix.c_echo = false};
@@ -57,9 +64,6 @@ let rec run_game (st: State.t) =
 let rec start_game (state: State.t) (start_coordinates : string) =
   Random.self_init ();
   let terminalio = Unix.tcgetattr Unix.stdin in
-  Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
-                                            Unix.c_icanon = false; 
-                                            Unix.c_echo = false};
   let string_list = string_to_list start_coordinates in
   try let xy = List.map int_of_string string_list in
     if List.length xy <> 2 
@@ -78,6 +82,9 @@ let rec start_game (state: State.t) (start_coordinates : string) =
           state.tiles.(x).(y) 
           <- start_tile_infection state.tiles.(x).(y);
           state in
+        Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
+                                                  Unix.c_icanon = false; 
+                                                  Unix.c_echo = false};
         run_game state_with_coordinates
       else
         (print_endline "\027[31mCoordinates are out of bounds!\027[0m";
@@ -218,7 +225,7 @@ let rec setup_disease =
      let starting_coordinates = read_line () in
 
      let map = Array.make_matrix (List.hd xy) (List.nth xy 1) 
-         (Tile.{tile_type = Road 0;
+         (Tile.{tile_type = Land;
                 infected = 0;
                 living =0;
                 dead = 0;
