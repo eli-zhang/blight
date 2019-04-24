@@ -47,4 +47,5 @@ let print_disease_menu (disease : Disease.t) =
   print_endline (string_of_int disease.lethality);
   print_endline "If you would like to change anything, 
   type the stat number followed by the new value 
-  ([1 40] changes the inner tile spread to 40."
+  ([1 40] changes the inner tile spread to 40.";
+  disease_parse (read_line ()) disease

@@ -14,18 +14,19 @@ let rec read_command (st: State.t) =
   let command = read_line () in
   begin
     match parse command with
-    | exception Empty -> ();
-    | exception Malformed -> print_endline "That's not a valid command!";
-    | Disease -> print_disease_menu st.disease;
+    | exception Empty -> st
+    | exception Malformed -> print_endline "That's not a valid command!"; st
+    | Disease -> let st' = {st with disease=print_disease_menu st.disease} in
       print_endline "Enter another command; type \"continue\" to continue.";
-      read_command st;
-    | Continue -> ();
+      read_command st';
+    | Continue -> st;
     | Quit -> exit 0;
   end
 
 (** [run_game st] is the main game loop that steps the game state [st],
     spreads disease within and between tiles, and prints out the map. *)
 let rec run_game (st: State.t) =
+  Unix.sleepf 0.1;
   Unix.set_nonblock Unix.stdin;
   begin
     match input_char Pervasives.stdin with
@@ -35,11 +36,12 @@ let rec run_game (st: State.t) =
       Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with 
                                                  Unix.c_icanon = true; 
                                                  Unix.c_echo = true};
-      read_command st;
-
+      print_endline "\027[0m";
+      let st' = read_command st in
       Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with 
                                                  Unix.c_icanon = false; 
                                                  Unix.c_echo = false};
+      run_game {st' with elapsed_time = st.elapsed_time + 1}
     | exception _ -> 
       print_string "\x1Bc";
       Unix.clear_nonblock Unix.stdin;
@@ -47,7 +49,6 @@ let rec run_game (st: State.t) =
       TerminalPrint.print_living_dead st;
       TerminalPrint.print_infected st;
       TerminalPrint.print_population st;
-      print_endline "If you would like to input a command, press [Enter] once.\nWait for a moment and do not input anything else!";
       flush Pervasives.stdout;
       let disease = st.disease in
       let tiles = st.tiles in
@@ -58,9 +59,8 @@ let rec run_game (st: State.t) =
            tiles.(x).(y) <- infect_tile (tiles.(x).(y))(disease);
          done
        done);
-  end;
-  Unix.sleepf 1.0;
-  run_game {st with elapsed_time = st.elapsed_time + 1}
+      run_game {st with elapsed_time = st.elapsed_time + 1}
+  end
 
 (** [start_game state start_coordinates] starts the game with a given state
     [state] (with the map, disease, and civilizations) and starts the disease at 
@@ -194,35 +194,34 @@ let setup_game =
                                                            (a)                               (b)                            (c)                             (d)
   \n";
   let selection = read_line () in
-  if selection <> "default" then
-    let temp_state = 
-      let civ1 = 
-        Civilization.{infected = ref 0; 
-                      living = ref 40000;
-                      dead = ref 0;
-                      population = 40000; 
-                      neighbors= []} in
-      let map = Array.make_matrix 20 20
-          Tile.{tile_type = (Civ civ1); 
-                infected = 0; 
-                living = 100;
-                dead = 0;
-                population = 100} in
-      let disease = Objects.cooties_default in
-      let civcoord = Array.make 5 (0,0) in
-      State.{civilizations = [civ1]; 
-             disease = disease; 
-             tiles = map; 
-             elapsed_time = 0;
-             civcoords = civcoord} in
-    if selection = "a" || selection = "ebola" then
-      let state = {temp_state with disease = Objects.ebola_default} in
-      start_game state "10 10"
-    else if selection = "b" || selection = "rabies" then
-      let state = {temp_state with disease = Objects.rabies_default} in
-      start_game state "10 10"
-    else if selection = "c" || selection = "cooties" then
-      start_game temp_state "10 10" else failwith "Invalid disease"
+  let temp_state = 
+    let civ1 = 
+      Civilization.{infected = ref 0; 
+                    living = ref 40000;
+                    dead = ref 0;
+                    population = 40000; 
+                    neighbors= []} in
+    let map = Array.make_matrix 20 20
+        Tile.{tile_type = (Civ civ1); 
+              infected = 0; 
+              living = 100;
+              dead = 0;
+              population = 100} in
+    let disease = Objects.cooties_default in
+    let civcoord = Array.make 5 (0,0) in
+    State.{civilizations = [civ1]; 
+           disease = disease; 
+           tiles = map; 
+           elapsed_time = 0;
+           civcoords = civcoord} in
+  if selection = "a" || selection = "ebola" then
+    let state = {temp_state with disease = Objects.ebola_default} in
+    start_game state "10 10"
+  else if selection = "b" || selection = "rabies" then
+    let state = {temp_state with disease = Objects.rabies_default} in
+    start_game state "10 10"
+  else if selection = "c" || selection = "cooties" then
+    start_game temp_state "10 10"
 
   else
     (print_string "\x1Bc";
