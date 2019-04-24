@@ -135,69 +135,116 @@ let rec coordinate_check prob =
     match read_line () with
     | input -> coordinate_check input
 
+
 (** [setup_disease] lets the user initialize the map with a civilization
     and choose different values for the disease they want to place into the
     world. *)
 let rec setup_disease =
   print_string "\x1Bc";
-  print_endline "Enter your map size in the form \"height length\": ";
+  print_string 
+    "\n\n\n\027[31m    
+    ▀█████████▄   ▄█        ▄█     ▄██████▄     ▄█    █▄        ███     
+      ███    ███ ███       ███    ███    ███   ███    ███   ▀█████████▄ 
+      ███    ███ ███       ███▌   ███    █▀    ███    ███      ▀███▀▀██ 
+     ▄███▄▄▄██▀  ███       ███▌  ▄███         ▄███▄▄▄▄███▄▄     ███   ▀ 
+    ▀▀███▀▀▀██▄  ███       ███▌ ▀▀███ ████▄  ▀▀███▀▀▀▀███▀      ███    
+      ███    ██▄ ███       ███    ███    ███   ███    ███       ███     
+      ███    ███ ███▌    ▄ ███    ███    ███   ███    ███       ███     
+    ▄█████████▀  █████▄▄██ █▀     ████████▀    ███    █▀       ▄████▀  
+    \027[0m\n\n\n";
+
+  print_endline "Would you like to use default or custom parameters?";
   print_string "> ";
-  let map_size = read_line () in
-  let xy = coordinate_check map_size in
+  let command = read_line () in
+  if command = "default" then
+    let state = 
+      let civ1 = 
+        Civilization.{infected = ref 0; 
+                      living = ref 40000;
+                      dead = ref 0;
+                      population = 40000; 
+                      neighbors= []} in
+      let map = Array.make_matrix 20 20
+          Tile.{tile_type = (Civ civ1); 
+                infected = 0; 
+                living = 100;
+                dead = 0;
+                population = 100} in
+      let disease = Disease.{inner_tile_spread = 20; 
+                             tile_to_tile_spread = 80;
+                             water_spread = 50;
+                             road_spread = 30;
+                             civ_to_civ_spread = 0;
+                             spread_probability = 10;
+                             lethality = 10} in
+      let civcoord = Array.make 5 (0,0) in
+      State.{civilizations = [civ1]; 
+             disease = disease; 
+             tiles = map; 
+             elapsed_time = 0;
+             civcoords = civcoord} in
+    start_game state "10 10"
 
-  print_endline "Enter inner tile spread: ";
-  print_string "> ";
-  let prob = read_line () in 
-  let inner_tile_spread = condition_check prob in 
+  else
+    (print_string "\x1Bc";
+     print_endline "Enter your map size in the form \"height length\": ";
+     print_string "> ";
+     let map_size = read_line () in
+     let xy = coordinate_check map_size in
 
-  print_endline "Enter tile to tile spread: ";
-  print_string "> ";
-  let prob = read_line () in
-  let tile_to_tile_spread = condition_check prob in
+     print_endline "Enter inner tile spread: ";
+     print_string "> ";
+     let prob = read_line () in 
+     let inner_tile_spread = condition_check prob in 
 
-  print_endline "Enter spread probability: ";
-  print_string "> ";
-  let prob = read_line () in
-  let spread_probability = condition_check prob in
+     print_endline "Enter tile to tile spread: ";
+     print_string "> ";
+     let prob = read_line () in
+     let tile_to_tile_spread = condition_check prob in
 
-  print_endline "Enter the disease lethality: ";
-  print_string "> ";
-  let prob = read_line () in  
-  let lethality = condition_check prob in
+     print_endline "Enter spread probability: ";
+     print_string "> ";
+     let prob = read_line () in
+     let spread_probability = condition_check prob in
 
-  print_endline "Enter the starting coordinates in the form \"x y\"";
-  print_string "> ";
-  let starting_coordinates = read_line () in
+     print_endline "Enter the disease lethality: ";
+     print_string "> ";
+     let prob = read_line () in  
+     let lethality = condition_check prob in
 
-  let map = Array.make_matrix (List.hd xy) (List.nth xy 1) 
-      (Tile.{tile_type = Road 0;
-             infected = 0;
-             living =0;
-             dead = 0;
-             population= 0}) in
-  let civcoord = Array.make 5 (0,0) in
-  let state = 
-    let civ1 = 
-      Civilization.{infected = ref 0; 
-                    living = ref (100 * (List.hd xy) * (List.nth xy 1));
-                    dead = ref 0;
-                    population = 100 * (List.hd xy) * (List.nth xy 1); 
-                    neighbors= []} in
+     print_endline "Enter the starting coordinates in the form \"x y\"";
+     print_string "> ";
+     let starting_coordinates = read_line () in
 
-    let disease = Disease.{inner_tile_spread = inner_tile_spread; 
-                           tile_to_tile_spread = tile_to_tile_spread;
-                           water_spread = 50;
-                           road_spread = 30;
-                           civ_to_civ_spread = 0;
-                           spread_probability = spread_probability;
-                           lethality = lethality} in
-    State.{civilizations = [civ1]; 
-           disease = disease; 
-           tiles = map; 
-           elapsed_time = 0;
-           civcoords = civcoord} in
-  generateMap state.tiles state.civcoords 10;
-  start_game state starting_coordinates
+     let map = Array.make_matrix (List.hd xy) (List.nth xy 1) 
+         (Tile.{tile_type = Road 0;
+                infected = 0;
+                living =0;
+                dead = 0;
+                population= 0}) in
+     let civcoord = Array.make 5 (0,0) in
+     let state = 
+       let civ1 = 
+         Civilization.{infected = ref 0; 
+                       living = ref (100 * (List.hd xy) * (List.nth xy 1));
+                       dead = ref 0;
+                       population = 100 * (List.hd xy) * (List.nth xy 1); 
+                       neighbors= []} in
+
+       let disease = Disease.{inner_tile_spread = inner_tile_spread; 
+                              tile_to_tile_spread = tile_to_tile_spread;
+                              water_spread = 50;
+                              road_spread = 30;
+                              civ_to_civ_spread = 0;
+                              spread_probability = spread_probability;
+                              lethality = lethality} in
+       State.{civilizations = [civ1]; 
+              disease = disease; 
+              tiles = map; 
+              elapsed_time = 0;
+              civcoords = civcoord} in
+     generateMap state.tiles state.civcoords 10;
+     start_game state starting_coordinates)
 
 (** [main ()] starts the game and prompts the user for the starting coordinates
     of the disease. *)
