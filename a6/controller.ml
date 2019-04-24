@@ -3,6 +3,7 @@ open Objects
 
 type command =
   | Quit
+  | Continue
   | Disease
 
 exception Empty
@@ -33,6 +34,7 @@ let parse (str : string) =
   | [] -> raise Empty
   | h::t ->
     if h = "quit" then Quit else
+    if h = "continue" then Continue else
     if h = "disease" then Disease else raise Malformed
 
 let print_disease_menu (disease : Disease.t) =
@@ -46,4 +48,6 @@ let print_disease_menu (disease : Disease.t) =
   print_endline (string_of_int disease.spread_probability);
   print_string "5. Lethality: ";
   print_endline (string_of_int disease.lethality);
-  print_endline "If you would like to change anything, type the stat number followed by the new value ([1 40] changes the inner tile spread to 40. If you don't, type [exit]."
+  print_endline "If you would like to change anything, 
+  type the stat number followed by the new value 
+  ([1 40] changes the inner tile spread to 40."

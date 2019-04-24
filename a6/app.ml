@@ -11,10 +11,23 @@ let string_to_list str =
   let command_list = (String.split_on_char ' ' str) in 
   List.filter (fun ele -> ele <> "") command_list
 
+let rec read_command (st: State.t) = 
+  let command = read_line () in
+  begin
+    match parse command with
+    | exception Empty -> ();
+    | exception Malformed -> print_endline "That's not a valid command!";
+    | Disease -> print_disease_menu st.disease;
+      print_endline "Enter another command; type \"continue\" to continue.";
+      read_command st;
+    | Continue -> ();
+    | Quit -> exit 0;
+  end
+
 (** [run_game st] is the main game loop that steps the game state [st],
     spreads disease within and between tiles, and prints out the map. *)
 let rec run_game (st: State.t) =
-  (* let civilizations = st.civilizations in *)
+
   Unix.set_nonblock Unix.stdin;
   begin
     match input_char Pervasives.stdin with
@@ -25,14 +38,7 @@ let rec run_game (st: State.t) =
       Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with 
                                                  Unix.c_icanon = true; 
                                                  Unix.c_echo = true};
-      let command = read_line () in
-      begin
-        match parse command with
-        | exception Empty -> ();
-        | exception Malformed -> print_endline "That's not a valid command!";
-        | Disease -> print_disease_menu st.disease;
-        | Quit -> exit 0;
-      end;
+      read_command st;
 
       Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with 
                                                  Unix.c_icanon = false; 

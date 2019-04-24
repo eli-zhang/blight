@@ -9,9 +9,19 @@ let print_map map time =
     if colors then 
       (* Prints the map in colored tiles *)
       match tile.tile_type with
-      | Land -> print_string "\027[40m  "; 
-      | Water _ -> print_string "\027[46m  "; 
-      | Road _ -> print_string "\027[0m  ";
+      | Land -> print_string "\x1B[48;2;30;63;0m  "; 
+      | Water percentage -> 
+        if percentage > 0 then
+          if percentage = 100 then (print_string "\x1B[48;2;153;255;51m  ") else
+          if percentage > 66 then (print_string "\x1B[48;2;153;255;153m  ") else
+            (print_string "\x1B[48;2;102;255;178m  ") 
+        else (print_string "\x1B[48;2;153;255;204m  ");
+      | Road percentage -> 
+        if percentage > 0 then
+          if percentage = 100 then (print_string "\x1B[48;2;102;102;0m  ") else
+          if percentage > 66 then (print_string "\x1B[48;2;112;61;0m\x1B[38;2;102;102;0m::") else
+            (print_string "\x1B[48;2;112;61;0m\x1B[38;2;102;102;0m··") 
+        else (print_string "\x1B[48;2;112;61;0m  ";);
       | Civ civ -> 
         let infected = tile.infected in 
         let population = tile.population in
