@@ -119,6 +119,7 @@ let rec placeRivers (map: Tile.t array array) n =
 (**[generateMap map] simply indexes the matrix map with the water, bridges, and civ tiles
    in the correct spots *)
 let generateMap (map: Tile.t array array) civs size= 
+  Random.self_init ();
   let nofcivs = Array.length civs in
 
 
