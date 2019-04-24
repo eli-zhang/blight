@@ -29,11 +29,13 @@ let infect_tile (tile : Tile.t) (disease : Disease.t) : Tile.t =
       let new_infected = int_of_float 
           (floor (((float_of_int disease.inner_tile_spread)
                    *. float_of_int tile.living) /. 100.0 +. 0.5))
-                         + tile.infected in 
+                         + tile.infected 
+                         + if disease.inner_tile_spread > 0 then 1 else 0  in 
       let died = if random_check disease.lethality
-        then (let max_dead = int_of_float 
-                  (floor (((float_of_int tile.living) *.  
-                           (float_of_int disease.lethality) /. 100.0) +. 0.5)) in
+        then (let max_dead = max (if disease.lethality > 0 then 1 else 0) 
+                  (int_of_float (floor (((float_of_int tile.living) *.  
+                                         (float_of_int disease.lethality) /. 
+                                         100.0) +. 0.5))) in
               let died_count = min (tile.infected - tile.dead) 
                   (min max_dead tile.living) in
               civ.living := (!(civ.living) - died_count);

@@ -27,13 +27,21 @@ let print_map map time =
             (print_string "\x1B[48;2;112;61;0m\x1B[38;2;102;102;0m··") 
         else (print_string "\x1B[48;2;112;61;0m  ";);
       | Civ civ -> 
-        let infected = tile.infected in 
+        let infected = tile.infected in
+        let dead = tile.dead in
         let population = tile.population in
-        let ratio = 100 * infected / population in
-        if ratio > 0 then 
-          if ratio = 100 then (print_string "\027[41m  ") else
-          if ratio > 66 then (print_string "\027[31m\027[47m::")
-          else (print_string "\027[31m\027[47m··")
+        let infected_ratio = 100 * infected / population in
+        let dead_ratio = 100 * dead / population in
+        if dead_ratio = 0 && infected_ratio = 0 then (print_string "\027[47m  ")
+        else if dead_ratio = 0 && infected_ratio = 100 then (print_string "\027[41m  ")
+        else if dead_ratio = 0 && infected_ratio > 66 then (print_string "\027[31m\027[47m::")
+        else if dead_ratio = 0 then (print_string "\027[31m\027[47m··")
+        else if dead_ratio = 100 then (print_string "\x1B[48;2;0;0;0m  ")
+        else if dead_ratio > 66 && infected_ratio = 100 then (print_string "\027[41m\x1B[38;2;0;0;0m::")
+        else if dead_ratio > 0 && infected_ratio = 100 then (print_string "\027[41m\x1B[38;2;0;0;0m··")
+        else if dead_ratio > 33 && infected_ratio > 66 then (print_string "\027[47m\x1B[38;2;0;0;0m:\027[31m:")
+        else if dead_ratio > 0 && infected_ratio > 66 then (print_string "\027[41m::")
+        else if dead_ratio > 0 && infected_ratio > 0 then (print_string "\027[47m\x1B[38;2;0;0;0m·\027[31m·")
         else (print_string "\027[47m  ";)
 
     else 
