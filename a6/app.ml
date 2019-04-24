@@ -14,8 +14,12 @@ let rec read_command (st: State.t) =
   let command = read_line () in
   begin
     match parse command with
-    | exception Empty -> st
-    | exception Malformed -> print_endline "That's not a valid command!"; st
+    |  exception Empty -> print_endline "You need to input something! Press [Enter] to continue.";
+      (match input_char Pervasives.stdin with
+       | _ -> st)
+    | exception Malformed -> print_endline "That's not a valid command! Press [Enter] to continue."; 
+      (match input_char Pervasives.stdin with
+       | _ -> st)
     | Disease -> let st' = {st with disease=print_disease_menu st.disease} in
       print_endline "Enter another command; type \"continue\" to continue.";
       read_command st';
@@ -27,6 +31,7 @@ let rec read_command (st: State.t) =
     spreads disease within and between tiles, and prints out the map. *)
 let rec run_game (st: State.t) =
   Unix.sleepf 0.1;
+  print_endline "Type [disease] to view the current disease stats and change them if needed. Type [quit] to quit the game.";
   Unix.set_nonblock Unix.stdin;
   let terminalio = Unix.tcgetattr Unix.stdin in
   begin
@@ -50,6 +55,7 @@ let rec run_game (st: State.t) =
       TerminalPrint.print_infected st;
       TerminalPrint.print_population st;
       TerminalPrint.print_world_info st;
+      print_endline "If you would like to input a command, press [Enter] once.\nWait for a moment and do not input anything else!";
       flush Pervasives.stdout;
 
       if (total_dead st) = (total_population st) then
