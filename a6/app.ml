@@ -28,11 +28,11 @@ let rec read_command (st: State.t) =
 let rec run_game (st: State.t) =
   Unix.sleepf 0.1;
   Unix.set_nonblock Unix.stdin;
+  let terminalio = Unix.tcgetattr Unix.stdin in
   begin
     match input_char Pervasives.stdin with
     | char -> 
       Unix.clear_nonblock Unix.stdin;
-      let terminalio = Unix.tcgetattr Unix.stdin in
       Unix.tcsetattr Unix.stdin Unix.TCSADRAIN { terminalio with 
                                                  Unix.c_icanon = true; 
                                                  Unix.c_echo = true};
@@ -50,16 +50,24 @@ let rec run_game (st: State.t) =
       TerminalPrint.print_infected st;
       TerminalPrint.print_population st;
       flush Pervasives.stdout;
-      let disease = st.disease in
-      let tiles = st.tiles in
 
-      (for x = 0 to Array.length tiles - 1 do
-         for y = 0 to Array.length tiles.(x) - 1 do
-           check_neighbors tiles x y disease;
-           tiles.(x).(y) <- infect_tile (tiles.(x).(y))(disease);
-         done
-       done);
-      run_game {st with elapsed_time = st.elapsed_time + 1}
+      if (total_dead st) = (total_population st) then
+        (print_endline "\027[0m\nCongratulations! You won!";
+         Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
+                                                   Unix.c_icanon = true; 
+                                                   Unix.c_echo = true};
+         exit 0)
+      else
+        let disease = st.disease in
+        let tiles = st.tiles in
+
+        (for x = 0 to Array.length tiles - 1 do
+           for y = 0 to Array.length tiles.(x) - 1 do
+             check_neighbors tiles x y disease;
+             tiles.(x).(y) <- infect_tile (tiles.(x).(y))(disease);
+           done
+         done);
+        run_game {st with elapsed_time = st.elapsed_time + 1}
   end
 
 (** [start_game state start_coordinates] starts the game with a given state

@@ -61,20 +61,26 @@ let print_living_dead (state: State.t) =
   print_endline("\027[31mTotal dead: "
                 ^ string_of_int (snd living_dead_count))
 
+let total_dead (state: State.t) =
+  List.fold_left (fun acc (civ: Civilization.t) -> 
+      acc + !(civ.dead)) 0 state.civilizations
+
+let total_infected (state: State.t) = 
+  List.fold_left (fun acc (civ: Civilization.t) -> 
+      acc + !(civ.infected)) 0 state.civilizations
+
 (** [print_infected state] prints the total number of infected people in
     the world given by state [state]. *)
 let print_infected (state: State.t) =
-  let total_infected = 
-    List.fold_left (fun acc (civ: Civilization.t) -> 
-        acc + !(civ.infected)) 0 state.civilizations in
   print_endline("\027[31mTotal infected: " 
-                ^ string_of_int total_infected)
+                ^ string_of_int (total_infected state))
+
+let total_population (state: State.t) =
+  List.fold_left (fun acc (civ: Civilization.t) -> acc + civ.population) 
+    0 state.civilizations
 
 (** [print_population state] prints the total number of people in the world
     given by state [state]. *)
 let print_population (state: State.t) =
-  let total_population =
-    List.fold_left (fun acc (civ: Civilization.t) -> acc + civ.population) 
-      0 state.civilizations in
   print_endline("\027[31mTotal population: "
-                ^ string_of_int total_population)
+                ^ string_of_int (total_population state))
