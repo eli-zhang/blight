@@ -98,15 +98,15 @@ let print_world_info (state: State.t) =
       (0, 0, 0, 0) state.civilizations in
   match stats with
   | (living, dead, infected, population) ->
-    let living_percent = (100 * living / population) in
-    let dead_percent = 100 * dead / population in
-    let infected_percent =  100 * infected / population in
+    let living_percent = 100.0 *. (float_of_int living) /. (float_of_int population) in
+    let dead_percent = 100.0 *. (float_of_int dead) /. (float_of_int population) in
+    let infected_percent =  100.0 *. (float_of_int infected) /. (float_of_int population) in
     let rec print_bar_helper percent color =
-      let threshold = 5 in
+      let threshold = 2.5 in
       if percent >= threshold 
       then (print_string (color ^ "  ");
-            print_bar_helper (percent - 5) color); in
-    print_bar_helper (dead_percent - living_percent) "\x1B[48;2;10;10;10m";
-    print_bar_helper infected_percent "\x1B[48;2;178;34;34m";
-    print_bar_helper (living_percent - infected_percent) "\x1B[48;2;143;188;143m";
+            print_bar_helper (percent -. 2.5) color); in
+    print_bar_helper (dead_percent) "\x1B[48;2;10;10;10m";
+    print_bar_helper (infected_percent -. dead_percent) "\x1B[48;2;178;34;34m";
+    print_bar_helper (living_percent -. infected_percent) "\x1B[48;2;143;188;143m";
     print_endline "\027[0m\n"

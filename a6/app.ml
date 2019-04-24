@@ -156,6 +156,64 @@ let rec coordinate_check prob =
     match read_line () with
     | input -> coordinate_check input
 
+let setup_disease state coords =
+  print_string "\x1Bc
+\027[0m                                              \x1B[38;2;51;0;0m                                                                          :%SSttXX88t 888 8888888@%X t            X@S 8          XS8S8X     ;S8SX888@:    
+\027[0m                                              \x1B[38;2;70;0;0m                                                                      :8%@S8S88888XS@ 8t8%;;tt ;8 8X88;          X8@;88;:        8X t@8:   t8Xt8888X      
+\027[0m                                              \x1B[38;2;91;0;0m                                                                     %XS8S8 8 :888S8 tS:         8888@S          S 8@X8:         @8;%XX   @@8X 8X88:      
+\027[0m                                              \x1B[38;2;111;0;0m                                                                   :%8@8X888X;88S88 :            S88888          ;8@8SXX:        8XS88   @X88 888 ;       
+\027[0m                                              \x1B[38;2;133;0;0m                                                                  XtX@88888%88SX; 88t@           :%8@8SS          %88X88;        8;8tX  S8%88 8:@         
+\027[0m                                              \x1B[38;2;144;0;0m                                                                ;XXXXX888;8888t tt8tX :            8S8@8:         :@8S88X        SX8 8:8@8X88888          
+\027[0m                                              \x1B[38;2;155;0;0m                                                              :@S@X888X88 X@t:   ;8X@8 ;           8;@88:          8;t8X8       ;@8 88@@888@ 88t          
+\027[0m                                              \x1B[38;2;166;0;0m                                                             %@88@@S SX8;t        @%8S@%%           @ X88@        : X8S:8:       S 8 88X888;8X:           
+\027[0m                                              \x1B[38;2;173;0;0m                                                           S888X8;S@XS8S;          8@8888           ;8%88 :         8888%       : :X8X8S@888;             
+\027[0m                                              \x1B[38;2;180;0;0m                                                         :tS%@8X8@%8888t           X @88@8t         ;@S88X8         t;;SX@       %88S888 @ S              
+\027[0m                                              \x1B[38;2;200;0;0m                                                       :@S888XX8 S88888S@           ;88;8X%;         :8S 8St         88888:      8S:@ ;@:88               
+\027[0m                                              \x1B[38;2;211;0;0m                                                       t888X888St88%88X@ :           ;tX8@@           % S88S%        X  8        8@S8S888X;               
+\027[0m                                              \x1B[38;2;223;0;0m                                                     S8888 88@8 S: %888%S@             8X @tt          ;8888 ;        88S;8:   :%@tt@8@X 8                
+\027[0m                                              \x1B[38;2;211;0;0m                                                    t8@888;@S ;;    :S 888@X           %88%8X8         :8XX%88        88@@XS  t8888  ::8t                 
+\027[0m                                              \x1B[38;2;200;0;0m                                                  :X888@8@X8X8;       ;%@8;@:%          S8t 8@;         X 8X8         ; 88SS  %88888X88t                  
+\027[0m                                              \x1B[38;2;180;0;0m                                                 ;8@;8888X8 :t         X8@;88;           X%%88@          tX8:X%        8@S88 8S:8% 8  8                   
+\027[0m                                              \x1B[38;2;170;0;0m                                                S@S@88%8t 8X            ;;t@8XX8          X@88X%S        ::@88X%      ;888%888 8S8%%S                     
+\027[0m                                              \x1B[38;2;160;0;0m                                              :SX@88%@S@S@ S              %:; 8;          :888SXSt        X@8S88;     :8S88%@@888%8;                      
+\027[0m                                              \x1B[38;2;155;0;0m                                             ;XSS888@88  8S:S8@            888X8SX         :St8XS8        ;X;X88X      @ 88S8@X888%                       
+\027[0m                                              \x1B[38;2;144;0;0m    ::;;;:%%S%;:  :tt:                       8@8888S888@X888 8 ;:          :S8888;8X:        8X888Xt       : 8888@    SStXS8%t@ 88                        
+\027[0m                                              \x1B[38;2;120;0;0mS;X@XS88XX8888X%88%8@8XX@t;SSt;:             St@888 8S;  :8X 8888t           :SX8@88@        ;88X8t8:       X 888X;  t88 8S8X  8X                         
+\027[0m                                              \x1B[38;2;111;0;0mS@X@S888S8SS888%S@88@X8@X888@8@;@8888SSt;:;8S88X@S%8;     S88:8X 88;          :8  :8;        :@%XS8@8;       % 8@ 888S8 @8S8X 8%                          
+\027[0m                                              \x1B[38;2;104;0;0m8@X888XXSX8888XX8@%88%888888@@%8@%8X88888@@8 :SXS X X        @888:88 8@        ;%888S 8         @ X88SS       8  8Xt88%@8 8 88;                           
+\027[0m                                              \x1B[38;2;154;0;0m@S@8XX@8888888888888888@888%88888tS8888888S888888;8tSt8S@8X8% ;S8SX8X8S8         @: @S 8:        8888%8:      @S@t; 88tX:@%@;                             
+\027[0m                                              \x1B[38;2;180;0;0mX888888@888;SX@8888888@t;XX88@8888888@888888X8S888@888888 X8 8XX888tt8X@S;:       :SS%8@ ;        88:@8S @@@XX8X88t@X%S X 8t                              
+\027[0m                                              \x1B[38;2;220;0;0m8888 88888S8%8888%@8888@8@888:88888%  SS::XSSSX8@@@888@8SS%@@;t88@ 8S   88S;@;@%8S8SXX@@@Xt::   : 8%88 XXXX;888;8@ 88:888;:                               
+\027[0m                                              \x1B[38;2;255;0;0m88@8Xtt;;       ;S88888X :;;::%t;tX88888StX8%S@@X8SX8888@88888X8S888888 88S8888S@@88%8t88%8888@S8@XS %S 88 8t%tX888t888;:                                 
+\027[0m                                              \x1B[38;2;215;0;0m88888            8XS8@ :          88888S8S8@ 8888888 t:%t8XX88@XX88888X8888X@8@8X XX8S%8 StX8888X8X@8StX88% 8SSS@X@8S@t                                   
+\027[0m                                              \x1B[38;2;180;0;0m SXS88           t 88@ :         SX%888X8X8 X::;;;;t    %88@88888 8tX@XX@8@888S88S @8@S88X 8XX::8 SX888 @X @8t88%8;                                       
+\027[0m                                              \x1B[38;2;150;0;0m88888:;          ;X@X@X8        :888888@88@:                   :;:tS8%88%%S8X % @8%t@8 @8tS8 S8;88:888 X8 X @%@:t:                                        
+\027[0m                                              \x1B[38;2;125;0;0m8888888          tt@88@8:       t88X8 XSXtS                         ::t;   ;St;X:t88S%8;8S: 8XXS 8t@X @8X88t:                                             
+\027[0m                                              \x1B[38;2;100;0;0m;;X8@%:            8@8 8       t@8888;:@8:                                            ;    ;SX::::%St                                                     
+\027[0m                                              \x1B[38;2;105;0;0m %X@88@t          S8S8@ :     %X8%8888 S                                                      :                                                           
+\027[0m                                              \x1B[38;2;110;0;0m ;S888X%          St88888   :tSt8% :88%X                                                                                                                  
+\027[0m                                              \x1B[38;2;125;0;0m  tt888@X         X @8XXX   S888tS8@ @t                                                                                                                   
+\027[0m                                              \x1B[38;2;135;0;0m   t88888         %;X %88% tS 88X888S :                                                                                                                   
+\027[0m                                              \x1B[38;2;143;0;0m   ;t8@88X         ;t@88 S8S8@888XSt;                                                                                                                     
+\027[0m                                              \x1B[38;2;158;0;0m     @8@8 t        :XS@8%%X8t@88888:                                                                                                                      
+\027[0m                                              \x1B[38;2;165;0;0m     @S88SS:       :%8X8:S88888t88;                                                                                                                       
+\027[0m                                              \x1B[38;2;178;0;0m     t;@@888        SS8@:@8888SS ::                                                                                                                       
+\027[0m                                              \x1B[38;2;190;0;0m      888X8@        S88@8X88X8 8:                                                                                                                         
+\027[0m                                              \x1B[38;2;210;0;0m      %88@88S       @888t8X8:8:;                                                                                                                          
+\027[0m\n";
+  print_string "\x1B[4;10H\x1B[38;2;255;0;0mThe goal of this game is to spread your disease and kill as many people as possible.";
+  print_string "\x1B[5;10H\x1B[38;2;255;0;0mUpgrade your disease so it can spread across water, roads, and through civilizations.";
+  print_string "\x1B[6;10H\x1B[38;2;255;255;255mName your disease:";
+  print_string "\x1B[7;10H\x1B[38;2;255;255;255m> ";
+  let disease_name = read_line () in
+  print_string "\x1B[9;10H\x1B[38;2;255;255;255mWhile the game is running, press any key to pause or enter commands.";
+  print_string "\x1B[10;10H\x1B[38;2;255;255;255mPress any key to start!";
+  read_line ();
+  start_game state coords
+
+
+
+
 (** [setup_disease] lets the user initialize the map with a civilization
     and choose different values for the disease they want to place into the
     world. *)
@@ -163,7 +221,7 @@ let setup_game =
   ANSITerminal.resize 200 45;
   print_string "\x1Bc";
   print_string 
-    "\n\n\n\n\n\n\n\n\n\n\x1B[38;2;179;137;179m
+    "\n\n\n\n\x1B[38;2;179;137;179m
                                                                         ▀█████████▄   ▄█        ▄█     ▄██████▄     ▄█    █▄        ███    \x1B[38;2;145;103;145m 
                                                                           ███    ███ ███       ███    ███    ███   ███    ███   ▀█████████▄ \x1B[38;2;117;73;117m
                                                                           ███    ███ ███       ███▌   ███    █▀    ███    ███      ▀███▀▀██ \x1B[38;2;94;47;94m
@@ -226,12 +284,12 @@ let setup_game =
            civcoords = civcoord} in
   if selection = "a" || selection = "ebola" then
     let state = {temp_state with disease = Objects.ebola_default} in
-    start_game state "10 10"
+    setup_disease state "10 10"
   else if selection = "b" || selection = "rabies" then
     let state = {temp_state with disease = Objects.rabies_default} in
-    start_game state "10 10"
+    setup_disease state "10 10"
   else if selection = "c" || selection = "cooties" then
-    start_game temp_state "10 10"
+    setup_disease temp_state "10 10"
 
   else
     (print_string "\x1Bc";
@@ -291,7 +349,7 @@ let setup_game =
               elapsed_time = 0;
               civcoords = civcoord} in
      generateMap state.tiles state.civcoords 10;
-     start_game state starting_coordinates)
+     setup_disease state starting_coordinates)
 
 
 (** [main ()] starts the game and prompts the user for the starting coordinates
