@@ -21,8 +21,8 @@ let rec getCivilizations (map: Tile.t array array) n acc s civs=
   then getCivilizations map n acc s civs else
     let size = s in
     match n with
-    | 0 -> acc
-    | _ -> civs.(n-1) <- (randx,randy); getCivilizations map (n-1) (((randx,randy), size) :: acc ) s civs
+    | 0 -> ((randx,randy),size):: acc
+    | _ -> civs.(n-1) <- (randx,randy); getCivilizations map (n-1) (((randx,randy), 8) :: acc ) s civs
 
 
 
@@ -129,12 +129,11 @@ let rec placeRivers (map: Tile.t array array) n =
 let generateMap (map: Tile.t array array) civs= 
   Random.self_init ();
   let nofcivs = Array.length civs in
-  let size =(( (Array.length map * Array.length (Array.get map 0))*4)/1000) in
 
 
   let nofrivs = nofcivs/3 in
   placeRivers map nofrivs;
-  let civilizations = getCivilizations map nofcivs [] size civs in
+  let civilizations = getCivilizations map nofcivs [] 8 civs in
   placeCivilizations map civilizations;
   getBridges map civilizations civilizations
 
