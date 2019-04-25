@@ -57,7 +57,7 @@ let news_dead_80 name =
   apocalyptic failure at the hands of " ^ name
 
 let news_dead_90 name =
-  "\"Nothing left to do but wait,\" claim last survivors as " ^ name " takes 
+  "\"Nothing left to do but wait,\" claim last survivors as " ^ name ^ " takes 
   the lives of the last humans on Earth"
 
 let random_list_ele list =
@@ -65,23 +65,28 @@ let random_list_ele list =
   let random = Random.int length in
   List.nth list random
 
-let choose_message state =
+let update_message state =
   let total_population = total_population state in
   let infected = total_infected state * 100 / total_population in
   let dead = total_dead state * 100 / total_population in
-  (* let message =
-     if dead = 0 then ""
-     else if dead < 20 then news_dead_1 state.name
-     else if dead < 50 then news_dead_20 state.name
-     else if dead < 80 then news_dead_50 state.name
-     else if dead < 90 then news_dead_80 state.name
-     else if dead < 100 then news_dead_90 state.name in *)
+  let dead_message =
+    if dead = 0 then ""
+    else if dead < 20 then news_dead_1 state.name
+    else if dead < 50 then news_dead_20 state.name
+    else if dead < 80 then news_dead_50 state.name
+    else if dead < 90 then news_dead_80 state.name
+    else if dead < 100 then news_dead_90 state.name
+    else news_dead_90 state.name in
 
-  if infected < 20 then random_list_ele news_infected_0
-  else if infected < 40 then random_list_ele news_infected_20
-  else if infected < 80 then random_list_ele news_infected_40
-  else if infected < 95 then random_list_ele news_infected_80
-  else random_list_ele news_infected_95
-
-let change_message (state: State.t) =
-  {state with news_message = (choose_message state)}
+  let infected_message =
+    if infected < 20 then random_list_ele news_infected_0
+    else if infected < 40 then random_list_ele news_infected_20
+    else if infected < 80 then random_list_ele news_infected_40
+    else if infected < 95 then random_list_ele news_infected_80
+    else random_list_ele news_infected_95 in
+  {state with news_message = 
+                if state.news_message = dead_message then infected_message
+                else if state.news_message = "" then 
+                  if Random.int 3 = 0 then
+                    dead_message else infected_message
+                else infected_message}

@@ -4,6 +4,7 @@ open Objects
 open Infection
 open State
 open RandomMap
+open News
 
 (** [string_to_list str] splits a string [str] at every space into a list. *)
 let string_to_list str =
@@ -31,6 +32,8 @@ let rec read_command (st: State.t) =
 (** [run_game st] is the main game loop that steps the game state [st],
     spreads disease within and between tiles, and prints out the map. *)
 let rec run_game (st: State.t) =
+  let ticks_per_news = 25 in
+
   Unix.sleepf 0.1;
   print_endline "Type [disease] to view the current disease stats and change them if needed. Type [quit] to quit the game.";
   Unix.set_nonblock Unix.stdin;
@@ -57,6 +60,8 @@ let rec run_game (st: State.t) =
       TerminalPrint.print_population st;
       print_string "\n";
       TerminalPrint.print_world_info st;
+      print_string "\027[m\n";
+      print_endline ("\027[1m\x1B[38;2;0;154;76mBreaking News: " ^ st.news_message ^ "\027[0m\n");
       print_endline "Press any key to pause the game or enter a command.";
       flush Pervasives.stdout;
 
@@ -76,7 +81,10 @@ let rec run_game (st: State.t) =
              tiles.(x).(y) <- infect_tile (tiles.(x).(y))(disease);
            done
          done);
-        run_game {st with elapsed_time = st.elapsed_time + 1}
+
+        if st.elapsed_time mod ticks_per_news = 0 then 
+          run_game {(update_message st) with elapsed_time = st.elapsed_time + 1}
+        else run_game {st with elapsed_time = st.elapsed_time + 1}
   end
 
 (** [start_game state start_coordinates] starts the game with a given state
@@ -106,7 +114,8 @@ let rec start_game (state: State.t) (start_coordinates : string) =
         Unix.tcsetattr Unix.stdin Unix.TCSADRAIN {terminalio with 
                                                   Unix.c_icanon = false; 
                                                   Unix.c_echo = false};
-        run_game state_with_coordinates
+        let st' = update_message state_with_coordinates in
+        run_game st'
       else
         (print_endline "\027[31mCoordinates are out of bounds!\027[0m";
          print_string "> ";
