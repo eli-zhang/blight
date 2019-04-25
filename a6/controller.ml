@@ -166,7 +166,7 @@ let rec print_upgrade_menu (state: State.t) : State.t =
 
 
   print_endline ("\x1B[4;10H\x1B[38;2;255;255;255m\027[1m" ^ state.name);
-  print_string "\n\027[0m\x1B[5;10H\x1B[38;2;255;255;255mType \"[upgrade_name]\" to upgrade your disease. Press [Enter] to exit.";
+  print_string "\n\027[0m\x1B[5;10H\x1B[38;2;255;255;255mType \"[upgrade_name]\" to upgrade your disease. Type [continue] to exit.";
   print_string "\x1B[6;10H\x1B[38;2;255;255;255m> ";
   match read_line () with
   | "mosquito transmission" -> print_upgrade_menu {state with disease = upgrade_disease mosquito_transmission disease}
@@ -180,4 +180,7 @@ let rec print_upgrade_menu (state: State.t) : State.t =
   | "cannibalism" -> print_upgrade_menu {state with disease = upgrade_disease cannibalism disease}
   | "uncontained rabies" -> print_upgrade_menu {state with disease = upgrade_disease uncontained_rabies disease}
   | "total collapse" -> print_upgrade_menu {state with disease = upgrade_disease total_collapse disease}
-  | _ -> state
+  | "continue" -> state
+  | _ -> print_endline "\x1B[9CThat is not an available upgrade! Press [Enter] to continue"; 
+    (match input_char Pervasives.stdin with
+     | _ -> print_upgrade_menu state);
