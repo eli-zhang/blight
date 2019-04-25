@@ -46,7 +46,7 @@ let news_dead_1 name =
   criticism of medical practices"
 
 let news_dead_20 name =
-  "\x1B[38;2;255;0;0mBreaking News: Large numbers of deaths in urban areas; ties found to disease " ^ name ^ ""
+  "\x1B[38;2;255;0;0mBreaking News: Large numbers of deaths in urban areas; ties found to disease " ^ name
 
 let news_dead_50 name =
   "\x1B[38;2;255;0;0mBreaking News: Rapidly spreading disease " ^ name ^ "takes a critical number of lives; 

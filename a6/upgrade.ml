@@ -10,7 +10,7 @@ type upgrade = {
 }
 
 let upgrade_list =
-  ["Moquito Transmission"; "Rat Transmission"; "Water Supply Infection";
+  ["Mosquito Transmission"; "Rat Transmission"; "Water Supply Infection";
    "Avian Transmission"; "Fever"; "Vomiting"; "Aggression"; "Internal Hemorrhaging";
    "Cannibalism"; "Uncontained Rabies"; "Total Collapse"]
 
