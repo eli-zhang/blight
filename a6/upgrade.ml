@@ -14,6 +14,8 @@ let upgrade_list =
    "Avian Transmission"; "Fever"; "Vomiting"; "Aggression"; "Internal Hemorrhaging";
    "Cannibalism"; "Uncontained Rabies"; "Total Collapse"]
 
+(** [upgrade_disease upgrade disease] upgrades a disease [disease] given the
+    upgrade information [upgrade]. *)
 let upgrade_disease (upgrade: upgrade) (disease: Disease.t) : Disease.t =
   Disease.{
     inner_tile_spread = min 100 (disease.inner_tile_spread + upgrade.inner_tile_boost);

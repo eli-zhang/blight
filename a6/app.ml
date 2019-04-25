@@ -12,6 +12,8 @@ let string_to_list str =
   let command_list = (String.split_on_char ' ' str) in 
   List.filter (fun ele -> ele <> "") command_list
 
+(** [read_command st] reads and parses in any commands whenever they are
+    entered when the game is running. *)
 let rec read_command (st: State.t) = 
   let command = read_line () in
   begin
@@ -174,6 +176,8 @@ let rec coordinate_check prob =
     match read_line () with
     | input -> coordinate_check input
 
+(** [setup_disease state] guides the user through the setup process
+    (choosing a name, picking coordinates to place the disease, etc.). *)
 let setup_disease (state: State.t) =
   print_string "\x1Bc
 \027[0m                                              \x1B[38;2;51;0;0m                                                                          :%SSttXX31t 311 3110311@%X t            X@S 8          XS8S8X     ;S8SX311@:    
@@ -265,9 +269,7 @@ let setup_disease (state: State.t) =
 
   start_game {state with name = disease_name} (read_line ())
 
-(** [setup_disease] lets the user initialize the map with a civilization
-    and choose different values for the disease they want to place into the
-    world. *)
+(** [setup_disease] lets the user choose default parameters about their disease. *)
 let setup_game =
   ANSITerminal.resize 200 45;
   print_string "\x1Bc";

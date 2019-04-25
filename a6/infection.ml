@@ -62,6 +62,9 @@ let infect_tile (tile : Tile.t) (disease : Disease.t) : Tile.t =
     else tile
   | _ -> tile
 
+(** [spread_to_neighbors tiles row column rows cols disease] spreads the disease
+    from given tile at row [row] and column [column] to neighboring tiles based
+    on a random spread probability given by disease [disease]. *)
 let spread_to_neighbors tiles row column rows cols (disease: Disease.t) =
   begin
     if row > 0 && column > 0 && random_check disease.spread_probability then
@@ -98,9 +101,9 @@ let check_neighbors (tiles: Tile.t array array) row column (disease: Disease.t) 
         if tile.living > 0 then
           spread_to_neighbors tiles row column rows cols disease
   | Water percentage -> if percentage > 0 then
-      if percentage >= disease.water_spread then
+      if percentage >= 100 - disease.water_spread then
         spread_to_neighbors tiles row column rows cols disease
   | Road percentage -> if percentage > 0 then
-      if percentage >= disease.road_spread then
+      if percentage >= 100 - disease.road_spread then
         spread_to_neighbors tiles row column rows cols disease
   | _ -> ()

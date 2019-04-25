@@ -40,20 +40,23 @@ module Tile = struct
   }
 end
 
+(** Default ebola disease *)
 let ebola_default = Disease.{inner_tile_spread = 5; 
-                             tile_to_tile_spread = 40;
+                             tile_to_tile_spread = 20;
                              water_spread = 80;
                              road_spread = 20;
                              spread_probability = 50;
                              lethality = 60}
 
+(** Default rabies disease *)
 let rabies_default = Disease.{inner_tile_spread = 10; 
-                              tile_to_tile_spread = 70;
+                              tile_to_tile_spread = 50;
                               water_spread = 0;
                               road_spread = 10;
                               spread_probability = 100;
                               lethality = 80}
 
+(** Default cooties disease *)
 let cooties_default = Disease.{inner_tile_spread = 40; 
                                tile_to_tile_spread = 0;
                                water_spread = 0;

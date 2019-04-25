@@ -40,6 +40,8 @@ let parse (str : string) =
     if h = "upgrade" then Upgrade else
     if h = "disease" then Disease else raise Malformed
 
+(** [print_disease_menu_number disease] prints out information about the given
+    disease [disease]. *)
 let print_disease_menu_numbers (disease : Disease.t) =
   print_string "Current disease stats:\n1. Inner tile spread: ";
   print_endline (string_of_int disease.inner_tile_spread);
@@ -55,6 +57,9 @@ let print_disease_menu_numbers (disease : Disease.t) =
   try disease_parse (read_line ()) disease
   with Disease_Malformed -> disease
 
+(** [print_disease_menu disease] prints out information about the disease 
+    [disease] and prompts the user to make any desired modifications 
+    to the disease stats. *)
 let print_disease_menu (disease : Disease.t) =
   let rec print_bar_helper percent color =
     let threshold = 5 in
@@ -83,6 +88,8 @@ let print_disease_menu (disease : Disease.t) =
   try disease_parse (read_line ()) disease
   with Disease_Malformed -> disease
 
+(** [print_upgrade_menu state] prints out the disease information and allows
+    the user to select any upgrades that they want to make to the disease. *)
 let rec print_upgrade_menu (state: State.t) : State.t = 
   print_string "\x1Bc
 \027[0m                                              \x1B[38;2;51;0;0m                                                                          :%SSttXX31t 311 3110311@%X t            X@S 8          XS8S8X     ;S8SX311@:    

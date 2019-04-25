@@ -60,11 +60,14 @@ let news_dead_90 name =
   "\x1B[38;2;255;0;0mBreaking News: \"Nothing left to do but wait,\" claim last survivors as " ^ name ^ " takes 
   final humans on Earth"
 
+(** [random_list_ele list] picks a random element from a [list] *)
 let random_list_ele list =
   let length = List.length list in
   let random = Random.int length in
   List.nth list random
 
+(** [update_message state] updates the current news article given the state
+    of the world [state]. *)
 let update_message state =
   let total_population = total_population state in
   let infected = total_infected state * 100 / total_population in
