@@ -124,8 +124,9 @@ let rec placeRivers (map: Tile.t array array) n =
     placeRivers map (n-1)
   else ()
 
-(**[generateMap map] simply indexes the matrix map with the water, bridges, and civ tiles
-   in the correct spots *)
+(**[generateMap map civs] simply indexes the matrix map with the water, bridges, and civ tiles
+   in the correct spots and sets the coordinate of one civ tile of each civilization to each
+   element in array civs *)
 let generateMap (map: Tile.t array array) civs= 
   Random.self_init ();
   let nofcivs = Array.length civs in
