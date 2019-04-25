@@ -58,7 +58,7 @@ let news_dead_80 name =
 
 let news_dead_90 name =
   "\"Nothing left to do but wait,\" claim last survivors as " ^ name ^ " takes 
-  the lives of the last humans on Earth"
+  final humans on Earth"
 
 let random_list_ele list =
   let length = List.length list in
@@ -69,8 +69,16 @@ let update_message state =
   let total_population = total_population state in
   let infected = total_infected state * 100 / total_population in
   let dead = total_dead state * 100 / total_population in
+  let infected_messages =
+    if infected < 20 then news_infected_0
+    else if infected < 40 then news_infected_20
+    else if infected < 80 then news_infected_40
+    else if infected < 95 then news_infected_80
+    else news_infected_95 in
+
+  let infected_message = random_list_ele infected_messages in
   let dead_message =
-    if dead = 0 then ""
+    if dead = 0 then infected_message
     else if dead < 20 then news_dead_1 state.name
     else if dead < 50 then news_dead_20 state.name
     else if dead < 80 then news_dead_50 state.name
@@ -78,15 +86,9 @@ let update_message state =
     else if dead < 100 then news_dead_90 state.name
     else news_dead_90 state.name in
 
-  let infected_message =
-    if infected < 20 then random_list_ele news_infected_0
-    else if infected < 40 then random_list_ele news_infected_20
-    else if infected < 80 then random_list_ele news_infected_40
-    else if infected < 95 then random_list_ele news_infected_80
-    else random_list_ele news_infected_95 in
   {state with news_message = 
                 if state.news_message = dead_message then infected_message
-                else if state.news_message = "" then 
-                  if Random.int 3 = 0 then
-                    dead_message else infected_message
-                else infected_message}
+                else if state.news_message = "" then
+                  infected_message 
+                else if List.mem state.news_message infected_messages then
+                  infected_message else dead_message}
