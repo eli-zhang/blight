@@ -367,7 +367,10 @@ let setup_game =
                 living =0;
                 dead = 0;
                 population= 0}) in
-     let civcoord = Array.make ( ((Array.length map) * (Array.length (Array.get map 0))/100 ) ) (0,0) in
+
+     let size = if ((Array.length map) * (Array.length (Array.get map 0))/100 ) > 20 
+       then 20 else ((Array.length map) * (Array.length (Array.get map 0))/100 ) in
+     let civcoord = Array.make ( size ) (0,0) in
      let rec getCivilizations(map:Tile.t array array) civs acc =
        match civs with
        | [] -> acc
