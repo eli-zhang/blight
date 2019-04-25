@@ -105,7 +105,7 @@ let rec start_game (state: State.t) (start_coordinates : string) =
       let x = List.hd xy in
       let y = List.nth xy 1 in
       if (Array.length state.tiles > x) && (Array.length state.tiles.(0) > y)
-         && (x > 0) && (y > 0)
+         && (x >= 0) && (y >= 0)
       then 
         let state_with_coordinates = 
           state.tiles.(x).(y) 
