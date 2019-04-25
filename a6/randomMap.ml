@@ -117,8 +117,8 @@ let rec placeRivers (map: Tile.t array array) n =
     if(x>(0) && y>(1) && x<(length) &&y<(width)) 
     then placeRiverDown map (x-1,y-1) else () in
   if n>0 then  
-    let randx = Random.int (length-1) in
-    let randy = Random.int (width-1) in
+    let randx = Random.int (length-1) +1 in
+    let randy = Random.int (width-1) + 1 in
     placeRiverUp map (randx,randy);
     placeRiverDown map (randx,randy);
     placeRivers map (n-1)
