@@ -116,5 +116,5 @@ let print_world_info (state: State.t) =
             print_bar_helper (percent -. threshold) color); in
     print_bar_helper (dead_percent) "\x1B[48;2;10;10;10m";
     print_bar_helper (infected_percent -. dead_percent) "\x1B[48;2;178;34;34m";
-    print_bar_helper (living_percent -. infected_percent) "\x1B[48;2;143;188;143m";
+    print_bar_helper (100.0 -. infected_percent) "\x1B[48;2;160;160;160m";
     print_endline "\027[0m\n"

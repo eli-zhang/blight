@@ -55,6 +55,7 @@ let rec run_game (st: State.t) =
       TerminalPrint.print_living_dead st;
       TerminalPrint.print_infected st;
       TerminalPrint.print_population st;
+      print_string "\n";
       TerminalPrint.print_world_info st;
       print_endline "Press any key to pause the game or enter a command.";
       flush Pervasives.stdout;
@@ -247,9 +248,6 @@ let setup_disease (state: State.t) coords =
   print_string "\x1B[36;10H\x1B[38;2;255;255;255mPress [Enter] to start!";
   read_line ();
   start_game state coords
-
-
-
 
 (** [setup_disease] lets the user initialize the map with a civilization
     and choose different values for the disease they want to place into the
