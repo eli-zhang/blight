@@ -367,7 +367,13 @@ let setup_game =
                 living =0;
                 dead = 0;
                 population= 0}) in
-     let civcoord = Array.make 5 (0,0) in
+     let civcoord = Array.make ( ((Array.length map) * (Array.length (Array.get map 0))/100 ) ) (0,0) in
+     let rec getCivilizations(map:Tile.t array array) civs acc =
+       match civs with
+       | [] -> acc
+       | (x,y)::t -> match (map.(x).(y)).tile_type with
+         | Civ civ -> getCivilizations map t (civ::acc)
+         | _ -> getCivilizations map t acc in
      let state = 
        let civ1 = 
          Civilization.{infected = ref 0; 
@@ -382,15 +388,15 @@ let setup_game =
                               road_spread = 30;
                               spread_probability = spread_probability;
                               lethality = lethality} in
-       State.{civilizations = [civ1]; 
+       State.{civilizations = []; 
               disease = disease; 
               name = "";
               tiles = map; 
               elapsed_time = 0;
               civcoords = civcoord;
               news_message = ""} in
-     generateMap state.tiles state.civcoords 10;
-     setup_disease state)
+     generateMap state.tiles state.civcoords ;
+     setup_disease {state with civilizations = getCivilizations state.tiles (Array.to_list state.civcoords) [] })
 
 (** [main ()] starts the game and prompts the user for the starting coordinates
     of the disease. *)

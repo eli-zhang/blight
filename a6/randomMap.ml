@@ -11,6 +11,7 @@ let civs = Array.make 10 (0,0)
 (** [getCivilizations map n acc] returns a list with length n that represents 
     civilizations *)
 let rec getCivilizations (map: Tile.t array array) n acc s civs=
+  Random.self_init ();
   let length = (Array.length map) in
   let width = (Array.length (Array.get map 0)) in
   let randx = Random.int (length) in
@@ -18,7 +19,7 @@ let rec getCivilizations (map: Tile.t array array) n acc s civs=
   if randx= 0 || randx = (length-1) || randy = 0 || randy = (width-1) 
      || (match map.(randx).(randy).tile_type with | Civ _ -> true  | _ -> false)
   then getCivilizations map n acc s civs else
-    let size = Random.int s+5 in
+    let size = s in
     match n with
     | 0 -> acc
     | _ -> civs.(n-1) <- (randx,randy); getCivilizations map (n-1) (((randx,randy), size) :: acc ) s civs
@@ -32,25 +33,32 @@ let rec placeCivilizations (map: Tile.t array array) civs =
   let width = (Array.length (Array.get map 0)) in
   let rec closestNonCiv (map: Tile.t array array) (x,y) = 
     let dir = Random.int 4 in
-    if (  dir = 0 && x-1 > -1) then (x-1,y)
-    else if ( dir = 1 &&x+1 < (length) ) then (x+1,y)
-    else if ( dir=2 &&y-1 > -1 ) then (x,y-1)
-    else if ( dir = 3&& y+1 < width ) then (x,y+1)
+    if (  dir = 0 && x-1 > -1) then if (match (map.(x-1).(y)).tile_type with | Civ _ -> false | _ -> true) then (x-1,y) else closestNonCiv map (x,y)
+    else if ( dir = 1 &&x+1 < (length) ) then if (match (map.(x+1).(y)).tile_type with | Civ _ -> false | _ -> true) then (x+1,y) else closestNonCiv map (x,y)
+    else if ( dir=2 &&y-1 > -1 )  then if (match (map.(x).(y-1)).tile_type with | Civ _ -> false | _ -> true) then (x,y-1) else closestNonCiv map (x,y)
+    else if ( dir = 3&& y+1 < width ) then if (match (map.(x).(y+1)).tile_type with | Civ _ -> false | _ -> true) then (x,y+1) else closestNonCiv map (x,y)
+    else if (x-1 > -1 && x+1< length && y+1<width && y-1 > -1 ) then if
+      ((match (map.(x-1).(y)).tile_type with | Civ _ -> true | _ -> false) &&
+       (match (map.(x+1).(y)).tile_type with | Civ _ -> true | _ -> false) &&
+       (match (map.(x).(y-1)).tile_type with | Civ _ -> true | _ -> false) &&
+       (match (map.(x).(y+1)).tile_type with | Civ _ -> true | _ -> false)
+      ) then closestNonCiv map (x+1,y) else closestNonCiv map (x+1,y)
+
     else closestNonCiv map (x,y) in
   match civs with
   | [] -> ();
-  | h::t -> 
-    let civilization = Civilization.{infected =ref 0; living =ref 0; dead= ref 0; population=0;neighbors=[] } in
+  | (c,s)::t -> 
+    let civilization = Civilization.{infected =ref 0; living =ref (50*(s+1)); dead= ref 0; population=50*(s+1);neighbors=[] } in
     let rec placeCiv ((x,y),size) =
       match (map.(x).(y)).tile_type with 
-      | Civ _ -> map.(x).(y) <- Tile.{tile_type = Civ civilization; infected =0; living = 0; dead=0;population = 50};
-      | _ -> map.(x).(y) <- Tile.{tile_type = (Civ {civilization with population = civilization.population +50});
+      | Civ _ -> map.(x).(y) <- Tile.{tile_type = Civ civilization; infected =0; living = 50; dead=0;population = 50};
+      | _ -> map.(x).(y) <- Tile.{tile_type = (Civ civilization);
                                   infected = 0; living= 50; dead=0; population =50 };
         if (size > 0) then
           let coord = closestNonCiv map (x,y) in placeCiv (coord, size-1)
         else  ();
     in 
-    placeCiv h;
+    placeCiv (c,s);
     placeCivilizations map t
 
 (** [getBridges map civs staticciv] indexes the matrix map with bridges that
@@ -118,9 +126,10 @@ let rec placeRivers (map: Tile.t array array) n =
 
 (**[generateMap map] simply indexes the matrix map with the water, bridges, and civ tiles
    in the correct spots *)
-let generateMap (map: Tile.t array array) civs size= 
+let generateMap (map: Tile.t array array) civs= 
   Random.self_init ();
   let nofcivs = Array.length civs in
+  let size =(( (Array.length map * Array.length (Array.get map 0))*4)/1000) in
 
 
   let nofrivs = nofcivs/3 in
@@ -150,6 +159,11 @@ let printMap (map: Tile.t array array) =
 
   in
   printMap_helper2  map 0 
+
+
+
+
+
 
 
 
