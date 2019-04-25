@@ -94,7 +94,7 @@ let check_neighbors (tiles: Tile.t array array) row column (disease: Disease.t) 
 
   match tile.tile_type with
   | Civ total_infected -> if tile.infected > 0 then
-      if 100 * tile.infected / tile.population >= disease.tile_to_tile_spread then
+      if 100 * tile.infected / tile.population >= (100 - disease.tile_to_tile_spread) then
         if tile.living > 0 then
           spread_to_neighbors tiles row column rows cols disease
   | Water percentage -> if percentage > 0 then

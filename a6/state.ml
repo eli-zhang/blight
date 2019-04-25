@@ -5,6 +5,7 @@ module State = struct
     civilizations: Civilization.t list;
     disease: Disease.t;
     name: string;
+    upgrades: string list;
     tiles: Tile.t array array;
     elapsed_time: int;
     civcoords: (int*int) array;

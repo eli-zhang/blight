@@ -5,6 +5,7 @@ open Infection
 open State
 open RandomMap
 open News
+open Upgrade
 
 (** [string_to_list str] splits a string [str] at every space into a list. *)
 let string_to_list str =
@@ -15,12 +16,13 @@ let rec read_command (st: State.t) =
   let command = read_line () in
   begin
     match parse command with
-    |  exception Empty -> print_endline "You need to input something! Press any key to continue.";
+    | exception Empty -> print_endline "You need to input something! Press any key to continue.";
       (match input_char Pervasives.stdin with
        | _ -> st)
     | exception Malformed -> print_endline "That's not a valid command! Press any key to continue."; 
       (match input_char Pervasives.stdin with
        | _ -> st)
+    | Upgrade -> print_upgrade_menu st;
     | Disease -> let st' = {st with disease=print_disease_menu st.disease} in
       print_endline "Enter another command; type \"continue\" to continue.";
       read_command st';
@@ -35,7 +37,7 @@ let rec run_game (st: State.t) =
   let ticks_per_news = 25 in
 
   Unix.sleepf 0.1;
-  print_endline "Type [disease] to view the current disease stats and change them if needed. Type [quit] to quit the game.";
+  print_endline "Type [upgrade] to upgrade your disease. Type [quit] to quit the game.";
   Unix.set_nonblock Unix.stdin;
   let terminalio = Unix.tcgetattr Unix.stdin in
   begin
@@ -61,7 +63,7 @@ let rec run_game (st: State.t) =
       print_string "\n";
       TerminalPrint.print_world_info st;
       print_string "\027[m\n";
-      print_endline ("\027[1m\x1B[38;2;0;154;76mBreaking News: " ^ st.news_message ^ "\027[0m\n");
+      print_endline ("\027[1m" ^ st.news_message ^ "\027[0m\n");
       print_endline "Press any key to pause the game or enter a command.";
       flush Pervasives.stdout;
 
@@ -91,7 +93,6 @@ let rec run_game (st: State.t) =
     [state] (with the map, disease, and civilizations) and starts the disease at 
     a given location [start_coordinates] inputted by the user.*)
 let rec start_game (state: State.t) (start_coordinates : string) =
-  Random.self_init ();
   let terminalio = Unix.tcgetattr Unix.stdin in
   let string_list = string_to_list start_coordinates in
   try let xy = List.map int_of_string string_list in
@@ -102,8 +103,8 @@ let rec start_game (state: State.t) (start_coordinates : string) =
           | exception End_of_file -> ()
           | input -> start_game state input)
     else
-      let x = List.hd xy in
-      let y = List.nth xy 1 in
+      let y = List.hd xy in
+      let x = List.nth xy 1 in
       if (Array.length state.tiles > x) && (Array.length state.tiles.(0) > y)
          && (x >= 0) && (y >= 0)
       then 
@@ -330,6 +331,7 @@ let setup_game =
     State.{civilizations = [civ1]; 
            disease = disease; 
            name = "";
+           upgrades = [];
            tiles = map; 
            elapsed_time = 0;
            civcoords = civcoord;
@@ -393,7 +395,6 @@ let setup_game =
                        dead = ref 0;
                        population = 100 * (List.hd xy) * (List.nth xy 1); 
                        neighbors = []} in
-
        let disease = Disease.{inner_tile_spread = inner_tile_spread; 
                               tile_to_tile_spread = tile_to_tile_spread;
                               water_spread = 50;
@@ -403,6 +404,7 @@ let setup_game =
        State.{civilizations = []; 
               disease = disease; 
               name = "";
+              upgrades = [];
               tiles = map; 
               elapsed_time = 0;
               civcoords = civcoord;
@@ -413,6 +415,7 @@ let setup_game =
 (** [main ()] starts the game and prompts the user for the starting coordinates
     of the disease. *)
 let main () = 
+  Random.self_init ();
   setup_game
 
 let () = main ()

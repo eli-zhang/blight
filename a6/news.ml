@@ -3,61 +3,61 @@ open State
 
 let news_infected_0 =
   [
-    "Speed Cubing Deemed Olympic Sport";
-    "Researchers Unknowingly Run Double-Blind Experiment on Themselves";
-    "Sleeping On Left Side Discovered To Be Marginally Better For Right Arm";
-    "\"Any Person, Any Study,\" Changed to \"Some People, Some Studies\" as Cornell Admission Rates Drop";
-    "Second Car in Space Laps First in Orbit";
-    "Years of Earbud Usage Leaves Youth Debilitated For Life";
-    "\"It's just a phase,\" Claims Struggling Alcoholic" 
+    "\x1B[38;2;0;255;0mSpeed Cubing Deemed Olympic Sport";
+    "\x1B[38;2;0;255;0mResearchers Unknowingly Run Double-Blind Experiment on Themselves";
+    "\x1B[38;2;0;255;0mSleeping On Left Side Discovered To Be Marginally Better For Right Arm";
+    "\x1B[38;2;0;255;0m\"Any Person, Any Study,\" Changed to \"Some People, Some Studies\" as Cornell Admission Rates Drop";
+    "\x1B[38;2;0;255;0mSecond Car in Space Laps First in Orbit";
+    "\x1B[38;2;0;255;0mYears of Earbud Usage Leaves Youth Debilitated For Life";
+    "\x1B[38;2;0;255;0m\"It's just a phase,\" Claims Struggling Alcoholic" 
   ]
 
 let news_infected_20 =
   [
-    "Doctors Worry About Declining Hand-Washing as Water Conservation Effort Comes To Life";
-    "Bestselling Book \"Nothing to Worry About\" Tops Charts Once Again";
-    "Anti-Vaccination Movement Popularizes \"Vaccines are drugs. Don't do drugs.\" Slogan";
+    "\x1B[38;2;0;154;76mDoctors Worry About Declining Hand-Washing as Water Conservation Effort Comes To Life";
+    "\x1B[38;2;0;154;76mBestselling Book \"Nothing to Worry About\" Tops Charts Once Again";
+    "\x1B[38;2;0;154;76mAnti-Vaccination Movement Popularizes \"Vaccines are drugs. Don't do drugs.\" Slogan";
   ]
 
 let news_infected_40 =
   [
-    "Doctors Warn About Recent Rise in Illness";
-    "Effects of Social Media on Trending Decline in Personal Hygiene";
-    "Proposed Six-Day Work Week Implemented Worldwide - Higher Productivity, Less Wasted Time";
+    "\x1B[38;2;0;220;220mDoctors Warn About Recent Rise in Illness";
+    "\x1B[38;2;0;220;220mEffects of Social Media on Trending Decline in Personal Hygiene";
+    "\x1B[38;2;0;220;220mProposed Six-Day Work Week Implemented Worldwide - Higher Productivity, Less Wasted Time";
   ]
 
 let news_infected_80 =
   [
-    "Widespread Sickness Hints at Troubling Future";
-    "Work Productivity Drops as Millions of Employees Take Sick Days";
-    "Researchers Investigating Cause of New Strain of Disease"
+    "\x1B[38;2;255;128;0mWidespread Sickness Hints at Troubling Future";
+    "\x1B[38;2;255;128;0mWork Productivity Drops as Millions of Employees Take Sick Days";
+    "\x1B[38;2;255;128;0mResearchers Investigating Cause of New Strain of Disease"
   ]
 
 let news_infected_95 =
   [
-    "Doctors Out of Office Due to Widespread Sickness";
-    "Government Shutdown as Politicians Meet to Resolve International Crisis";
-    "\"Desolate and Barren,\" Claims NYC Tourist";
-    "\"I shouldn't have eaten that fish,\" Claims Alleged Origin of Worldwide Disease"
+    "\x1B[38;2;200;51;51mDoctors Out of Office Due to Widespread Sickness";
+    "\x1B[38;2;200;51;51mGovernment Shutdown as Politicians Meet to Resolve International Crisis";
+    "\x1B[38;2;200;51;51m\"All emptied out,\" Says NYC Tourist";
+    "\x1B[38;2;200;51;51m\"I shouldn't have eaten that fish,\" Claims Alleged Origin of Worldwide Disease"
   ]
 
 let news_dead_1 name =
-  "First death due to unknown disease, named " ^ name ^ " by doctors, leads to 
+  "\x1B[38;2;255;0;0mBreaking News: First death due to unknown disease, named " ^ name ^ " by doctors, leads to 
   criticism of medical practices"
 
 let news_dead_20 name =
-  "Large numbers of deaths in urban areas; ties found to disease " ^ name ^ ""
+  "\x1B[38;2;255;0;0mBreaking News: Large numbers of deaths in urban areas; ties found to disease " ^ name ^ ""
 
 let news_dead_50 name =
-  "Rapidly spreading disease " ^ name ^ "takes a critical number of lives; 
+  "\x1B[38;2;255;0;0mBreaking News: Rapidly spreading disease " ^ name ^ "takes a critical number of lives; 
   scientists doing everything they can to prevent further spread"
 
 let news_dead_80 name =
-  "Desperation sets in as humans make last-ditch effort to prevent total 
+  "\x1B[38;2;255;0;0mBreaking News: Desperation sets in as humans make last-ditch effort to prevent total 
   apocalyptic failure at the hands of " ^ name
 
 let news_dead_90 name =
-  "\"Nothing left to do but wait,\" claim last survivors as " ^ name ^ " takes 
+  "\x1B[38;2;255;0;0mBreaking News: \"Nothing left to do but wait,\" claim last survivors as " ^ name ^ " takes 
   final humans on Earth"
 
 let random_list_ele list =

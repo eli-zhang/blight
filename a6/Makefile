@@ -1,4 +1,4 @@
-MODULES=objects terminalPrint infection controller demomap state news app
+MODULES=objects terminalPrint infection controller demomap state news upgrade app
 OBJECTS=$(MODULES:=.cmo) 
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
