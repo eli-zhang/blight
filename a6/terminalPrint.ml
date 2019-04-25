@@ -110,10 +110,10 @@ let print_world_info (state: State.t) =
     let dead_percent = 100.0 *. (float_of_int dead) /. (float_of_int population) in
     let infected_percent =  100.0 *. (float_of_int infected) /. (float_of_int population) in
     let rec print_bar_helper percent color =
-      let threshold = 2.5 in
+      let threshold = 1.0 in
       if percent >= threshold 
-      then (print_string (color ^ "  ");
-            print_bar_helper (percent -. 2.5) color); in
+      then (print_string (color ^ " ");
+            print_bar_helper (percent -. threshold) color); in
     print_bar_helper (dead_percent) "\x1B[48;2;10;10;10m";
     print_bar_helper (infected_percent -. dead_percent) "\x1B[48;2;178;34;34m";
     print_bar_helper (living_percent -. infected_percent) "\x1B[48;2;143;188;143m";
