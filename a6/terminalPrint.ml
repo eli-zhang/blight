@@ -19,7 +19,7 @@ let print_map map time =
           if percentage = 100 then (print_string "\x1B[48;2;153;255;51m  ") else
           if percentage > 66 then (print_string "\x1B[48;2;153;255;153m  ") else
             (print_string "\x1B[48;2;102;255;178m  ") 
-        else (print_string "\x1B[48;2;153;255;204m  ");
+        else (print_string "\x1B[48;2;105;255;255m  ");
       | Road percentage -> 
         if percentage > 0 then
           if percentage = 100 then (print_string "\x1B[48;2;102;102;0m  ") else
@@ -74,23 +74,13 @@ let print_living_dead (state: State.t) =
   print_endline("\027[31mTotal dead: "
                 ^ string_of_int (snd living_dead_count))
 
-let total_dead (state: State.t) =
-  List.fold_left (fun acc (civ: Civilization.t) -> 
-      acc + !(civ.dead)) 0 state.civilizations
 
-let total_infected (state: State.t) = 
-  List.fold_left (fun acc (civ: Civilization.t) -> 
-      acc + !(civ.infected)) 0 state.civilizations
 
 (** [print_infected state] prints the total number of infected people in
     the world given by state [state]. *)
 let print_infected (state: State.t) =
   print_endline("\027[31mTotal infected: " 
                 ^ string_of_int (total_infected state))
-
-let total_population (state: State.t) =
-  List.fold_left (fun acc (civ: Civilization.t) -> acc + civ.population) 
-    0 state.civilizations
 
 (** [print_population state] prints the total number of people in the world
     given by state [state]. *)

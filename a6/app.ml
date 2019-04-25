@@ -164,7 +164,7 @@ let rec coordinate_check prob =
     match read_line () with
     | input -> coordinate_check input
 
-let setup_disease (state: State.t) coords =
+let setup_disease (state: State.t) =
   print_string "\x1Bc
 \027[0m                                              \x1B[38;2;51;0;0m                                                                          :%SSttXX31t 311 3110311@%X t            X@S 8          XS8S8X     ;S8SX311@:    
 \027[0m                                              \x1B[38;2;70;0;0m                                                                      :8%@S8S31108XS@ 8t8%;;tt ;8 8X31;          X8@;31;:        8X t@8:   t8Xt3110X      
@@ -246,8 +246,14 @@ let setup_disease (state: State.t) coords =
   print_bar_helper (100 - disease.lethality) "\x1B[48;2;160;160;160m";
   print_string "\027[0m\n";
   print_string "\x1B[36;10H\x1B[38;2;255;255;255mPress [Enter] to start!";
-  read_line ();
-  start_game state coords
+  ignore(read_line ());
+
+  print_string "\x1Bc";
+  TerminalPrint.print_map state.tiles state.elapsed_time;
+  print_endline "\027[0m\nPick starting coordinates in the form \"x y\".";
+  print_string "> ";
+
+  start_game {state with name = disease_name} (read_line ())
 
 (** [setup_disease] lets the user initialize the map with a civilization
     and choose different values for the disease they want to place into the
@@ -314,17 +320,19 @@ let setup_game =
     let civcoord = Array.make 5 (0,0) in
     State.{civilizations = [civ1]; 
            disease = disease; 
+           name = "";
            tiles = map; 
            elapsed_time = 0;
-           civcoords = civcoord} in
+           civcoords = civcoord;
+           news_message = ""} in
   if selection = "a" || selection = "ebola" then
     let state = {temp_state with disease = Objects.ebola_default} in
-    setup_disease state "10 10"
+    setup_disease state
   else if selection = "b" || selection = "rabies" then
     let state = {temp_state with disease = Objects.rabies_default} in
-    setup_disease state "10 10"
+    setup_disease state
   else if selection = "c" || selection = "cooties" then
-    setup_disease temp_state "10 10"
+    setup_disease temp_state
 
   else
     (print_string "\x1Bc";
@@ -353,10 +361,6 @@ let setup_game =
      let prob = read_line () in  
      let lethality = condition_check prob in
 
-     print_endline "Enter the starting coordinates in the form \"x y\"";
-     print_string "> ";
-     let starting_coordinates = read_line () in
-
      let map = Array.make_matrix (List.hd xy) (List.nth xy 1) 
          (Tile.{tile_type = Land;
                 infected = 0;
@@ -370,7 +374,7 @@ let setup_game =
                        living = ref (100 * (List.hd xy) * (List.nth xy 1));
                        dead = ref 0;
                        population = 100 * (List.hd xy) * (List.nth xy 1); 
-                       neighbors= []} in
+                       neighbors = []} in
 
        let disease = Disease.{inner_tile_spread = inner_tile_spread; 
                               tile_to_tile_spread = tile_to_tile_spread;
@@ -380,12 +384,13 @@ let setup_game =
                               lethality = lethality} in
        State.{civilizations = [civ1]; 
               disease = disease; 
+              name = "";
               tiles = map; 
               elapsed_time = 0;
-              civcoords = civcoord} in
+              civcoords = civcoord;
+              news_message = ""} in
      generateMap state.tiles state.civcoords 10;
-     setup_disease state starting_coordinates)
-
+     setup_disease state)
 
 (** [main ()] starts the game and prompts the user for the starting coordinates
     of the disease. *)
