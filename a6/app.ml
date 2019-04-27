@@ -39,7 +39,7 @@ let rec run_game (st: State.t) =
   let ticks_per_news = 25 in
 
   Unix.sleepf 0.1;
-  print_endline "Type [upgrade] to upgrade your disease. Type [quit] to quit the game.";
+  print_string "Type [upgrade] to upgrade your disease. Type [quit] to quit the game.";
   Unix.set_nonblock Unix.stdin;
   let terminalio = Unix.tcgetattr Unix.stdin in
   begin
